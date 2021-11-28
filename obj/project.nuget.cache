@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "TQt4no0+lQiBthPUBGsY6fYPUmimFOd/fq+5IzT0pVpD2X5jHwKu4YYB0HAhF/xE8s9bUo4O2iZobHJSHgR3rQ==",
+  "success": true,
+  "projectFilePath": "D:\\Program-Files\\CS-Projects\\FirstProjectCS\\FirstProjectCS.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.21\\microsoft.netcore.app.host.win-x64.3.1.21.nupkg.sha512",
+    "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
+    "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512",
+    "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.netcore.app.ref\\3.1.0\\microsoft.netcore.app.ref.3.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}
