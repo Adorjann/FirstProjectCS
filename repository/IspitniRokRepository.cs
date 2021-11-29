@@ -20,7 +20,7 @@ namespace FirstProjectCS.repository
             //SELECT ir FROM ispitni_rok ir WHERE ir.Naziv = ?
             foreach(IspitniRok ir in sviRokovi)
             {
-                if(ir.Naziv == uneseniNaziv)
+                if(ir.Naziv.ToLower() == uneseniNaziv.ToLower())
                 {
                     return ir;
                 }

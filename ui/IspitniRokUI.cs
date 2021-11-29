@@ -109,12 +109,23 @@ namespace FirstProjectCS.ui
 
         private static void Edit()
         {
-			IspitniRok rokZaBrisanje = PomocnaKlasa.nameToIspitniRok();
-			if(rokZaBrisanje != null)
+			IspitniRok rokZaIzmenu = PomocnaKlasa.nameToIspitniRok();
+			if(rokZaIzmenu != null)
             {
+				Console.Write("Unesite novi naziv ispitnog roka:");
+				string noviNaziv = Console.ReadLine();
+				Console.WriteLine("Unesite novi datum pocetka ispitnog roka: \n\tyyyy-MM-dd");
+				string noviPocetak = Console.ReadLine();
+				Console.WriteLine("Unesite datum kraja novog ispitnog roka: \n\tyyyy-MM-dd");
+				string noviKraj = Console.ReadLine();
 
+				rokZaIzmenu.Naziv = noviNaziv;
+				rokZaIzmenu.Pocetak = StringToDate(noviPocetak);
+				rokZaIzmenu.Kraj = StringToDate(noviKraj);
 
-            }
+				Console.WriteLine($"Uspesno promenjeni podaci o {noviNaziv} ispitnom roku");
+
+			}
             else
             {
 				Console.WriteLine("Ne postoji ispitni rok sa zadatim imenom.");
@@ -127,10 +138,21 @@ namespace FirstProjectCS.ui
 			string nazivNovog = Console.ReadLine();
 			Console.WriteLine("Unesite datum pocetka novog ispitnog roka: \n\tyyyy-MM-dd");
 			string pocetakNovog = Console.ReadLine();
-			Console.WriteLine("Unesite datum kraj novog ispitnog roka: \n\tyyyy-MM-dd");
+			Console.WriteLine("Unesite datum kraja novog ispitnog roka: \n\tyyyy-MM-dd");
 			string krajNovog = Console.ReadLine();
 
-			TODO: zavrsi 
+			IspitniRok noviRok = new IspitniRok(0, nazivNovog, StringToDate(pocetakNovog), StringToDate(krajNovog));
+			IspitniRok sacuvaniRok = IspitniRokServiceImpl.Save(noviRok);
+
+			if(sacuvaniRok != null)
+            {
+				Console.WriteLine("Uspesno sacuvan novi Ispitni Rok");
+            }
+            else
+            {
+
+				Console.WriteLine("*** Unos novog Ispitnog Roka nije uspeo.");
+			}
 
 		}
 

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Program-Files\\CS-Projects\\FirstProjectCS\\FirstProjectCS.csproj": {}
+    "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj": {}
   },
   "projects": {
-    "D:\\Program-Files\\CS-Projects\\FirstProjectCS\\FirstProjectCS.csproj": {
+    "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Program-Files\\CS-Projects\\FirstProjectCS\\FirstProjectCS.csproj",
+        "projectUniqueName": "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj",
         "projectName": "FirstProjectCS",
-        "projectPath": "D:\\Program-Files\\CS-Projects\\FirstProjectCS\\FirstProjectCS.csproj",
+        "projectPath": "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj",
         "packagesPath": "C:\\Users\\Adorjan\\.nuget\\packages\\",
-        "outputPath": "D:\\Program-Files\\CS-Projects\\FirstProjectCS\\obj\\",
+        "outputPath": "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Adorjan\\AppData\\Roaming\\NuGet\\NuGet.Config",
