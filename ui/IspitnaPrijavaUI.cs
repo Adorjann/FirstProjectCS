@@ -71,10 +71,9 @@ namespace FirstProjectCS.ui
 				IspitnaPrijava obrisanaPrijava = IspitnaPrijavaServiceImpl.delete(iPrijava);
 				if(obrisanaPrijava != null)
                 {
-					student.StudentPrijavljujeIspitnePrijave.Remove(obrisanaPrijava);
-					predmet.PredmetImaPrijavljeneIspitnePrijave.Remove(obrisanaPrijava);
-					iRok.IspitniRokImaPrijavljeneIspitnePrijave.Remove(obrisanaPrijava);
+					Console.WriteLine("Uspesno obrisana ispitna prijava!");
                 }
+                else { Console.WriteLine("Brisanje ispitne prijave nije uspelo."); }
             }
 		}
 

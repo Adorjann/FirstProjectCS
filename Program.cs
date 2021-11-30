@@ -81,7 +81,7 @@ namespace FirstProjectCS
                         break;
                     case 5:
                         Console.WriteLine("Ispitna PrijavaUI");
-                        Console.WriteLine("\n** jos uvek nije implementirano.\n");
+                        IspitnaPrijavaUI.meniIspitnaPrijava();
                         break;
                     default:
                         Console.WriteLine("Nepostojeca komanda");

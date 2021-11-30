@@ -14,7 +14,7 @@ namespace FirstProjectCS.repository
             //SELECT nastavnik FROM nastavnik WHERE nastavnik.ime = ?
             foreach (Nastavnik n in sviNastavnici)
             {
-                if (n.Ime == ime)
+                if (n.Ime.StartsWith(ime))
                     return n;
             }
             return null;

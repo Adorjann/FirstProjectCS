@@ -56,7 +56,7 @@ namespace FirstProjectCS.repository
             foreach (Predmet predmet in sviPredmeti)
             {
 
-                if(predmet.Naziv.ToLower() == name.ToLower())
+                if(predmet.Naziv.StartsWith(name))
                 {
                     return retVal = predmet;
                     
