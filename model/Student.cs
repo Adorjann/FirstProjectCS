@@ -24,9 +24,10 @@ namespace FirstProjectCS.model
         public string Prezime { get => prezime; set => prezime = value; }
         public string Grad { get => grad; set => grad = value; }
         internal List<Predmet> StudentPohadjaPredmete { get => studentPohadjaPredmete; set => studentPohadjaPredmete = value; }
+        internal List<IspitnaPrijava> StudentPrijavljujeIspitnePrijave { get => studentPrijavljujeIspitnePrijave; set => studentPrijavljujeIspitnePrijave = value; }
 
         private List<Predmet> studentPohadjaPredmete = new List<Predmet>();
-        //private List<IspitnaPrijava> studentPrijavljujeIspitnePrijave = new <IspitnaPrijava>();
+        private List<IspitnaPrijava> studentPrijavljujeIspitnePrijave = new List<IspitnaPrijava>();
 
         //Konstruktori
 
@@ -107,6 +108,61 @@ namespace FirstProjectCS.model
             catch(Exception e)
             {
                 throw new Exception (e.Message);
+            }
+
+        }
+        public List<IspitnaPrijava> dodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        {
+            try
+            {
+                if (ispitnaPrijava != null)
+                {
+                    if (!this.studentPrijavljujeIspitnePrijave.Contains(ispitnaPrijava))
+                    {
+                        this.studentPrijavljujeIspitnePrijave.Add(ispitnaPrijava);   //dodajemo ispitnu prijavu
+
+                        if (ispitnaPrijava.Student != this)
+                        {
+                            ispitnaPrijava.Student = this;     //azuriramo drugu stranu veze
+                        }
+                        return this.studentPrijavljujeIspitnePrijave;
+                    }
+                    else { throw new AccessViolationException("*** *** Student" + this.ime + " ima ispitnu prijavu"); }
+                }
+                else
+                {
+                    throw new AccessViolationException("*** greska pri dodavanju ispitne prijave, proverite podatke.");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
+
+        }
+
+        public List<IspitnaPrijava> izbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        {
+            try
+            {
+                if (ispitnaPrijava != null)
+                {
+                    this.studentPrijavljujeIspitnePrijave.Remove(ispitnaPrijava);  //izbacujemo ispitnu prijavu
+                    if(ispitnaPrijava.Student == this)
+                    {
+                        ispitnaPrijava.Student = null;                  //razvezujemo drugu stranu veze
+                    }
+                    return this.studentPrijavljujeIspitnePrijave;
+                }
+                else
+                {
+                    throw new AccessViolationException("*** greska pri izbacivanju ispitne prijave, proverite podatke.");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
 
         }

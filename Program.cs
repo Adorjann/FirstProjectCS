@@ -45,6 +45,7 @@ namespace FirstProjectCS
             NastavnikUI.ucitajNastavnikeSaFajla(nastavniciFajl);
             Nastavnik_Predmet.ucitajVezuNastavnik_Predmet(nastavnik_predmetFajl);
             IspitniRokUI.ucitajIspitniRokSaFajla(ispitni_rokoviFajl);
+            IspitnaPrijavaUI.ucitajIspitnePrijaveSaFajla(ispitne_prijaveFajl);
 
 
 
@@ -96,8 +97,8 @@ namespace FirstProjectCS
             Student_Predmet.zapisiVezuStudent_Predmet(student_predmetFajl);
             NastavnikUI.zapisiNastavnikeUFajl(nastavniciFajl);
             IspitniRokUI.ZapisiIspitniRokUFajl(ispitni_rokoviFajl);
-            
             Nastavnik_Predmet.zapisiVezuNastavnik_Predmet(nastavnik_predmetFajl);
+            //IspitnaPrijavaUI.zapisiIspitnePrijaveUFajl(ispitne_prijaveFajl);
 
             Console.WriteLine("Program zavrsen");
 

@@ -90,10 +90,11 @@ namespace FirstProjectCS.ui
                 }	
             }else if (kolekcija.Equals("prijave"))
             {
-				Console.WriteLine("Ispitne prijave jos uvek nisu implementirane");
+				foreach(IspitnaPrijava ip in predmet.PredmetImaPrijavljeneIspitnePrijave)
+                {
+					Console.WriteLine(ip);
+                }
             }
-
-			//TODO: ispis kolekcije po zelji
 		}
 
         private static void getAll()
@@ -204,7 +205,7 @@ namespace FirstProjectCS.ui
 			finally
 			{
 				sr.Close();
-				Console.WriteLine("Zavrseno ucitavanje studenata");
+				Console.WriteLine("Zavrseno ucitavanje predmeta");
 			}
 		}
 

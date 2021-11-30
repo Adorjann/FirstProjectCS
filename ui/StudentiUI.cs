@@ -206,7 +206,10 @@ namespace FirstProjectCS.ui
                     }
                 }else if(kolekcija == "ispitnePrijave")
                 {
-                    Console.WriteLine("\n*** \nJos nismo implementirali mogucnost sa ispitnim prijavama");
+                    foreach(IspitnaPrijava ip in student.StudentPrijavljujeIspitnePrijave)
+                    {
+                        Console.WriteLine(ip);
+                    }
                 }
             }
             else

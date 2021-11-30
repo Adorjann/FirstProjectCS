@@ -102,7 +102,7 @@ namespace FirstProjectCS.ui
                 }
             }else if(sviNastavnici.Count == 0 && sviNastavnici != null)
             {
-				Console.WriteLine("Ne postoji ni jedan ispitni rok!");
+				Console.WriteLine("Ne postoji ni jedan nastavnik!");
             }
             else
             {
@@ -224,6 +224,7 @@ namespace FirstProjectCS.ui
             finally
             { 
 				sr.Close();
+				Console.WriteLine("Zavrseno ucitavanje nastavnika");
             }
 
         }

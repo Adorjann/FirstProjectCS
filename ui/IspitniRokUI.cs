@@ -63,13 +63,15 @@ namespace FirstProjectCS.ui
         private static void GetOne(string prijave)
         {
 			IspitniRok ispitniRok = PomocnaKlasa.nameToIspitniRok();
-			if(ispitniRok != null)
-            {
+			if (ispitniRok != null)
+			{
 				Console.WriteLine("\n-|- " + ispitniRok);
-				if(prijave == "prijave")
-                {
-					Console.WriteLine("*** Ovaj feature jos uvek nije implementiran");
-					//TODO: ispisivanje ISpitnih prijava kada dimplementiras ispitne Prijave
+				if (prijave == "prijave")
+				{
+					foreach(IspitnaPrijava ip in ispitniRok.IspitniRokImaPrijavljeneIspitnePrijave)
+                    {
+						Console.WriteLine(ip);
+                    }
 				}
 			}
         }
@@ -196,6 +198,7 @@ namespace FirstProjectCS.ui
 			finally
 			{
 				sr.Close();
+				Console.WriteLine("Zavrseno ucitavanje ispitnih rokova");
 			}
 		}
 		public static void ZapisiIspitniRokUFajl(string fajl)
