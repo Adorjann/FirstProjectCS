@@ -66,14 +66,17 @@ namespace FirstProjectCS.ui
 			int prijavaID = Convert.ToInt32($"{student.Id}{predmet.Id}{iRok.Id}");
 
 			IspitnaPrijava iPrijava = IspitnaPrijavaServiceImpl.findById(prijavaID);
+			
 			if(iPrijava != null)
             {
-				IspitnaPrijava obrisanaPrijava = IspitnaPrijavaServiceImpl.delete(iPrijava);
-				if(obrisanaPrijava != null)
-                {
-					Console.WriteLine("Uspesno obrisana ispitna prijava!");
-                }
-                else { Console.WriteLine("Brisanje ispitne prijave nije uspelo."); }
+				bool response = PomocnaKlasa.yesOrNo();
+
+				IspitnaPrijava obrisanaPrijava = response ?
+					IspitnaPrijavaServiceImpl.delete(iPrijava) : null;
+
+				string finallOdgovor =
+					obrisanaPrijava == null ? "Brisanje ispitne prijave nije uspelo." : "Uspesno obrisana ispitna prijava!";
+				
             }
 		}
 

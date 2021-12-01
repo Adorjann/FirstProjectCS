@@ -22,6 +22,7 @@ namespace FirstProjectCS.ui
             Console.WriteLine("\tOpcija broj 4 - ispis podataka svih studenata");
             Console.WriteLine("\tOpcija broj 5 - ispis podataka o odredjenom studentu sa njegovim predmetima koje pohadja");
             Console.WriteLine("\tOpcija broj 6 - ispis podataka o odredjenom studentu sa njegovim ispitnim prijavama");
+            Console.WriteLine("\tOpcija broj 7 - ispis podataka svih studenata SORTIRANO po broju polozenih predmeta");
             Console.WriteLine("\t\t ...");
             Console.WriteLine("\tOpcija broj 0 - IZLAZ");
 
@@ -60,19 +61,21 @@ namespace FirstProjectCS.ui
 
                     case 4:
                         //ispis svih studenata [GET]
-                        getAll(); //u ovu metodu ponudi opciju sortiranje
+                        getAll(); 
                         break;
 
                     case 5:
-                        //TODO: ispis podataka o odredjenom studentu sa njegovim predmetima koje pohadja [GET]
+                        //ispis podataka o odredjenom studentu sa njegovim predmetima koje pohadja [GET]
                         getOne("predmeti");
                         break;
 
                     case 6:
-                        //TODO: ispis podataka o odredjenom studentu sa njegovim ispitnim prijavama [GET]
+                        //ispis podataka o odredjenom studentu sa njegovim ispitnim prijavama [GET]
                         getOne("prijave");
                         break;
-
+                    case 7:
+                        sortirajStudentePoPolozenimIspitima();
+                        break;
                     
 
                     default:
@@ -88,6 +91,33 @@ namespace FirstProjectCS.ui
             }
 
         }
+
+        private static void sortirajStudentePoPolozenimIspitima()
+        {
+            List<Student> studenti = StudentServisImpl.findAll();
+
+            Console.WriteLine("Studente je moguce sortirati \n\t|1| - Br Polozenih predmeta Rastuce\n\t|2| - Br Polozenih predmeta Opadajuce");
+            Console.WriteLine("Izaberi opciju: ");
+            int odluka = Convert.ToInt32(Console.ReadLine());
+            switch (odluka)
+            {
+                case 1:
+                    studenti.Sort(new PolozenihIspitaComparator(1));
+                    break;
+                case 2:
+                    studenti.Sort(new PolozenihIspitaComparator(-1));
+                    break;
+                default:
+                    break;
+            }
+
+            printSviStudenti(studenti);
+
+
+
+
+        }
+
         //PostMapping
         public static void create()
         {
@@ -176,15 +206,18 @@ namespace FirstProjectCS.ui
             }
             else
             {
-                Console.WriteLine("Svi studenti: ");
-                foreach (Student student in studenti)
-                {
-                    Console.WriteLine("\t"+student);
-                }
+                printSviStudenti(studenti);
             }
+            
+        }
 
-
-
+        private static void printSviStudenti(List<Student> studenti)
+        {
+            Console.WriteLine("Svi studenti: ");
+            foreach (Student student in studenti)
+            {
+                Console.WriteLine("\t" + student);
+            }
         }
 
 
@@ -199,14 +232,15 @@ namespace FirstProjectCS.ui
                 Console.WriteLine("\n-|- " + student);
                 if(kolekcija == "predmeti")
                 {
-                    Console.WriteLine("Student " + student.Ime + " pohadja predmete: \n");
+                    Console.WriteLine("\t\t pohadja predmete: \n");
                     foreach(Predmet it in student.StudentPohadjaPredmete)
                     {
                         Console.WriteLine("\t" + it);
                     }
                 }else if(kolekcija == "ispitnePrijave")
                 {
-                    foreach(IspitnaPrijava ip in student.StudentPrijavljujeIspitnePrijave)
+                    Console.WriteLine("\t\t ima ispitne prijave: \n");
+                    foreach (IspitnaPrijava ip in student.StudentPrijavljujeIspitnePrijave)
                     {
                         Console.WriteLine(ip);
                     }

@@ -60,6 +60,7 @@ namespace FirstProjectCS.model
 
         public int sracunajOcenu()
         {
+            
             double bodovi = sracunajProsek();
             int ocena;
             if(bodovi >= 95)

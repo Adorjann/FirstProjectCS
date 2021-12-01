@@ -14,8 +14,9 @@ namespace FirstProjectCS.model
         private string ime;
         private string prezime;
         private string grad;
+        private List<Predmet> studentPohadjaPredmete = new List<Predmet>();
+        private List<IspitnaPrijava> studentPrijavljujeIspitnePrijave = new List<IspitnaPrijava>();
 
-       
 
         //get - set
         public int Id { get => id; set => id = value; }
@@ -26,8 +27,7 @@ namespace FirstProjectCS.model
         internal List<Predmet> StudentPohadjaPredmete { get => studentPohadjaPredmete; set => studentPohadjaPredmete = value; }
         internal List<IspitnaPrijava> StudentPrijavljujeIspitnePrijave { get => studentPrijavljujeIspitnePrijave; set => studentPrijavljujeIspitnePrijave = value; }
 
-        private List<Predmet> studentPohadjaPredmete = new List<Predmet>();
-        private List<IspitnaPrijava> studentPrijavljujeIspitnePrijave = new List<IspitnaPrijava>();
+      
 
         //Konstruktori
 
