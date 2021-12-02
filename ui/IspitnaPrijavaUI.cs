@@ -63,21 +63,18 @@ namespace FirstProjectCS.ui
 			Student student = PomocnaKlasa.indexToStudent();
 			Predmet predmet = PomocnaKlasa.nameToPredmet();
 			IspitniRok iRok = PomocnaKlasa.nameToIspitniRok();
-			int prijavaID = Convert.ToInt32($"{student.Id}{predmet.Id}{iRok.Id}");
-
-			IspitnaPrijava iPrijava = IspitnaPrijavaServiceImpl.findById(prijavaID);
 			
-			if(iPrijava != null)
-            {
+			
+				Console.WriteLine("* Da li ste sigurni da zelite da obrisete ispitnu prijavu " +
+					$"studenta {student.Ime} za predmet {predmet.Naziv} u ispitnom roku {iRok.Naziv} ?");
 				bool response = PomocnaKlasa.yesOrNo();
 
-				IspitnaPrijava obrisanaPrijava = response ?
-					IspitnaPrijavaServiceImpl.delete(iPrijava) : null;
+			IspitnaPrijava obrisanaPrijava = IspitnaPrijavaServiceImpl.delete(student,predmet,iRok);
 
 				string finallOdgovor =
 					obrisanaPrijava == null ? "Brisanje ispitne prijave nije uspelo." : "Uspesno obrisana ispitna prijava!";
 				
-            }
+            Console.WriteLine(finallOdgovor);
 		}
 
         private static void dodajIspitnuPrijavu()
@@ -93,7 +90,6 @@ namespace FirstProjectCS.ui
 			int zadaci = Convert.ToInt32(Console.ReadLine());
 
 			IspitnaPrijava ispitnaPrijava = new IspitnaPrijava(student,predmet,iRok,teorija,zadaci);
-			ispitnaPrijava.SetId(); // void,bez parametara
 			IspitnaPrijava sacuvanaIP = IspitnaPrijavaServiceImpl.save(ispitnaPrijava);
 
 			if(sacuvanaIP != null)
@@ -164,14 +160,9 @@ namespace FirstProjectCS.ui
 					iPrijava.Teorija = Convert.ToInt32(tokeni[3]);
 					iPrijava.Zadaci= Convert.ToInt32(tokeni[4]);
 
-					//TODO update drugu stranu veze
-					IspitnaPrijava sacuvanaIspitnaPrijava = IspitnaPrijavaServiceImpl.save(iPrijava);
-					if(sacuvanaIspitnaPrijava != null)
-                    {
-						student.dodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
-						predmet.dodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
-						ispitniRok.dodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
-                    }
+					
+					IspitnaPrijavaServiceImpl.save(iPrijava);
+					
 					line = sr.ReadLine();
 
 				}
@@ -193,18 +184,16 @@ namespace FirstProjectCS.ui
         }
 		public static void zapisiIspitnePrijaveUFajl(string fajl)
         {
-			List<IspitnaPrijava> svePrijave = IspitnaPrijavaServiceImpl.findAll();
+			List<IspitniRok> sviRokovi = IspitniRokServiceImpl.FindAll();
 
 			StreamWriter sw = new StreamWriter(fajl);
 			try {
 
-                if (svePrijave.Count > 0)
-                {
-					foreach(IspitnaPrijava ip in svePrijave)
-                    {
-						sw.WriteLine(ip.toFileRepresentation());
-                    }
-                }
+				sviRokovi.ForEach(rok =>
+					rok.IspitniRokImaPrijavljeneIspitnePrijave.ForEach(prijava =>
+						sw.Write(prijava.toFileRepresentation())
+					)
+				); 
 
 			}catch (Exception e)
             {

@@ -8,48 +8,44 @@ namespace FirstProjectCS.servis.Impl
 {
     internal class IspitnaPrijavaServiceImpl
     {
-           
-
-
-        internal static IspitnaPrijava save(IspitnaPrijava iPrijava)
+        
+        internal static IspitnaPrijava delete(Student student, Predmet predmet, IspitniRok iRok)
         {
-            List<IspitnaPrijava> svePrijave = findAll();
+            IspitnaPrijava prijavaZaBrisanje = 
+                student.StudentPrijavljujeIspitnePrijave.Find(ip => 
+                ip.Student.Id == student.Id &&
+                ip.Predmet.Id == predmet.Id &&
+                ip.IspitniRok.Id == iRok.Id 
+                );
 
-            if (!svePrijave.Contains(iPrijava))
+            if (prijavaZaBrisanje != null)
             {
-                return IspitnaPrijavaRepository.save(iPrijava);
-            }
-            return null;
-        }
+                bool bulStud = student.izbaciIspitnuPrijavu(prijavaZaBrisanje);
+                bool bulpred = predmet.izbaciIspitnuPrijavu(prijavaZaBrisanje);
+                bool bulIRok = iRok.izbaciIspitnuPrijavu(prijavaZaBrisanje);
 
-        public static List<IspitnaPrijava> findAll()
-        {
-            return IspitnaPrijavaRepository.findAll();
-        }
-
-        internal static IspitnaPrijava findById(int prijavaID)
-        {
-            return IspitnaPrijavaRepository.findById(prijavaID);
-        }
-
-        internal static IspitnaPrijava delete(IspitnaPrijava iPrijava)
-        {
-            List<IspitnaPrijava> svePrijave = findAll();
-
-            if(iPrijava != null && svePrijave.Contains(iPrijava))
-            {
-                bool success = IspitnaPrijavaRepository.delete(iPrijava);
-                if (success)
+                if(bulIRok && bulpred && bulStud)
                 {
-                    iPrijava.Student.izbaciIspitnuPrijavu(iPrijava);
-                    iPrijava.Predmet.izbaciIspitnuPrijavu(iPrijava);
-                    iPrijava.IspitniRok.izbaciIspitnuPrijavu(iPrijava);
-
-                    return iPrijava;
+                    return prijavaZaBrisanje;
                 }
-                return null;
             }
             return null;
+            
+        }
+
+        internal static IspitnaPrijava save(IspitnaPrijava ispitnaPrijava)
+        {
+            bool bulStud = ispitnaPrijava.Student.dodajIspitnuPrijavu(ispitnaPrijava);
+            bool bulPred = ispitnaPrijava.Predmet.dodajIspitnuPrijavu(ispitnaPrijava);
+            bool bulIRok = ispitnaPrijava.IspitniRok.dodajIspitnuPrijavu(ispitnaPrijava);
+
+             if(bulIRok && bulStud && bulPred)
+            {
+                return ispitnaPrijava;
+            }
+            return null;
+                
+
         }
     }
 }

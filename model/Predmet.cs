@@ -162,7 +162,7 @@ namespace FirstProjectCS.model
             }
 
         }
-        public List<IspitnaPrijava> dodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        public bool dodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
         {
             try
             {
@@ -176,7 +176,7 @@ namespace FirstProjectCS.model
                         {
                             ispitnaPrijava.Predmet = this;     //azuriramo drugu stranu veze
                         }
-                        return this.predmetImaPrijavljeneIspitnePrijave;
+                        return this.predmetImaPrijavljeneIspitnePrijave.Contains(ispitnaPrijava);
                     }
                     else { throw new AccessViolationException($"*** *** Predmet {this.naziv} vec sadrzi ovu ispitnu prijavu"); }
                 }
@@ -193,7 +193,7 @@ namespace FirstProjectCS.model
 
         }
 
-        public List<IspitnaPrijava> izbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        public bool izbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
         {
             try
             {
@@ -204,7 +204,7 @@ namespace FirstProjectCS.model
                     {
                         ispitnaPrijava.Predmet = null;                  //razvezujemo drugu stranu veze
                     }
-                    return this.predmetImaPrijavljeneIspitnePrijave;
+                    return !this.predmetImaPrijavljeneIspitnePrijave.Contains(ispitnaPrijava);
                 }
                 else
                 {

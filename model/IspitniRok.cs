@@ -40,7 +40,7 @@ namespace FirstProjectCS.model
             return $"{this.id},{this.naziv},{pocetak.Date.ToString("yyyy-MM-dd")},{kraj.Date.ToString("yyyy-MM-dd")}";
         }
 
-        public List<IspitnaPrijava> dodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        public bool dodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace FirstProjectCS.model
                         {
                             ispitnaPrijava.IspitniRok = this;     //azuriramo drugu stranu veze
                         }
-                        return this.ispitniRokImaPrijavljeneIspitnePrijave;
+                        return this.ispitniRokImaPrijavljeneIspitnePrijave.Contains(ispitnaPrijava);
                     }
                     else { throw new AccessViolationException($"*** *** Ispitni rok {this.naziv} vec sadrzi ovu ispitnu prijavu"); }
                 }
@@ -71,7 +71,7 @@ namespace FirstProjectCS.model
 
         }
 
-        public List<IspitnaPrijava> izbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        public bool izbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace FirstProjectCS.model
                     {
                         ispitnaPrijava.IspitniRok = null;                  //razvezujemo drugu stranu veze
                     }
-                    return this.ispitniRokImaPrijavljeneIspitnePrijave;
+                    return !this.ispitniRokImaPrijavljeneIspitnePrijave.Contains(ispitnaPrijava);
                 }
                 else
                 {

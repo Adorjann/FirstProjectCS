@@ -98,7 +98,7 @@ namespace FirstProjectCS
             NastavnikUI.zapisiNastavnikeUFajl(nastavniciFajl);
             IspitniRokUI.ZapisiIspitniRokUFajl(ispitni_rokoviFajl);
             Nastavnik_Predmet.zapisiVezuNastavnik_Predmet(nastavnik_predmetFajl);
-            //IspitnaPrijavaUI.zapisiIspitnePrijaveUFajl(ispitne_prijaveFajl);
+            IspitnaPrijavaUI.zapisiIspitnePrijaveUFajl(ispitne_prijaveFajl);
 
             Console.WriteLine("Program zavrsen");
 
