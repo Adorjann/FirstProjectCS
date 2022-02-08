@@ -90,7 +90,7 @@ namespace FirstProjectCS
 
 
             }
-            //TODO UI klase zapis podataka u fajlove i potom program zavrsen;
+            
 
             StudentiUI.zapisiStudenteUFajl(studentiFajl);
             PredmetUI.zapisiPredmeteUFajl(predmetiFajl);

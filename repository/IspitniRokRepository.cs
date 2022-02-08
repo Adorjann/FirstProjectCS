@@ -11,59 +11,69 @@ namespace FirstProjectCS.repository
 
         private static List<IspitniRok> sviRokovi = new List<IspitniRok>();
 
-
-
-
-        internal static IspitniRok findByName(string uneseniNaziv)
+        internal static Optional findByName(string uneseniNaziv)
         {
-
             //SELECT ir FROM ispitni_rok ir WHERE ir.Naziv = ?
             foreach(IspitniRok ir in sviRokovi)
             {
-                if(ir.Naziv.ToLower() == uneseniNaziv.ToLower())
+                if (ir.Naziv.ToLower() == uneseniNaziv.ToLower())
                 {
-                    return ir;
+                    return Optional.Of(ir);
                 }
             }
-            return null;
+            return Optional.Empty();
         }
 
-        internal static IspitniRok findById(int id)
+        internal static Optional findById(int id)
         {
             //SELECT ir FROM ispitni_rok ir WHERE ir.id = ?
             foreach (IspitniRok ir in sviRokovi)
             {
                 if (ir.Id == id)
                 {
-                    return ir;
+                    return Optional.Of(ir);
                 }
             }
-            return null;
+            return Optional.Empty();
         }
 
-        internal static IspitniRok save(IspitniRok ir)
+        internal static Optional save(IspitniRok ir)
         {
-
             //INSERT INTO ispitni_rok VALUES (????);
-            if (ir.Id == 0) //dummy autoincrament
+            Optional OispitniRok = findByName(ir.Naziv);
+
+            if (!OispitniRok.IsPresent && ir != null)
             {
-                ir.Id = IspitniRokRepository.sviRokovi.Count;
-                ir.Id++;
+                if (ir.Id == 0) //dummy autoincrament
+                {
+                    ir.Id = IspitniRokRepository.sviRokovi.Count;
+                    ir.Id++;
+                }
+                sviRokovi.Add(ir);
+                return Optional.Of(ir);
             }
-            sviRokovi.Add(ir);
-            return ir;
+
+            return Optional.Empty();
         }
 
-        internal static List<IspitniRok> findAll()
+        internal static Optional  findAll()
         {
             //SELECT * FROM ispitni_rok;
-          return sviRokovi;
+            if (sviRokovi.Count == 0)
+            {
+                return Optional.Empty();
+            }
+            return Optional.Of(sviRokovi);
         }
 
-        internal static bool Delete(IspitniRok rokZaBrisanje)
+        internal static Optional Delete(IspitniRok rokZaBrisanje)
         {
             //DELETE ispitni_rok ir WHERE ir.id = ?
-            return IspitniRokRepository.sviRokovi.Remove(rokZaBrisanje);
+            if (sviRokovi.Remove(rokZaBrisanje))
+            {
+                return Optional.Of(sviRokovi);
+            }
+            return Optional.Empty();
         }
     }
 

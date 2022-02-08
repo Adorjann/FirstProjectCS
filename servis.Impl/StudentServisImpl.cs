@@ -1,51 +1,81 @@
 ﻿using FirstProjectCS.model;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using FirstProjectCS.model;
 using FirstProjectCS.repository;
 
 namespace FirstProjectCS.servis.Impl
 {
-    internal class StudentServisImpl 
+    //"Servis" 
+    public class StudentServisImpl 
     {
-        //"Servis" 
+        
+        //DI
+        private readonly CustomException exceptions = (CustomException)SingletonCreator.GetInstance(typeof(CustomException));
+        private readonly StudentRepository studentRepo = (StudentRepository)SingletonCreator.GetInstance(typeof(StudentRepository));
+        private StudentServisImpl()
+        {
 
+        }
         
 
-        public static Student delete(Student student)
+        public  Student Delete(Student student)
         {
-            return StudentRepository.delete(student);
+            Optional Ostudent = studentRepo.delete(student);
+            if (Ostudent.IsPresent)
+            {
+                return (Student)Ostudent.Get();
+            }
+            throw exceptions.GetObjectNotFoundException();
         }
 
-        public static List<Student> findAll()
+        public  List<Student> FindAll()
         {
-            return StudentRepository.findAll();
+            Optional OallStudents = studentRepo.findAll();
+            if (OallStudents.IsPresent)
+            {
+                return (List<Student>)OallStudents.Get();
+            }
+            throw exceptions.GetCollectionIsEmptyException();
         }
 
-        public static List<Student> findAllSorted()
+        public  List<Student> FindAllSorted()
         {
             throw new NotImplementedException();
         }
 
-        public static Student findById(int id)
+        public  Student FindById(int id)
         {
-            return StudentRepository.findById(id);
+            Optional Ostudent =  studentRepo.findById(id);
+            if (Ostudent.IsPresent)
+            {
+                return (Student)Ostudent.Get();
+            }
+            throw exceptions.GetObjectNotFoundException();
         }
 
-        public static Student findByIndex(string index)
+        public  Student FindByIndex(string index)
         {
-            return StudentRepository.findByIndex(index);
+            Optional Ostudent = studentRepo.findByIndex(index);
+            if (Ostudent.IsPresent)
+            {
+                return(Student)Ostudent.Get();
+            }
+            throw exceptions.GetObjectNotFoundException();
         }
 
-        public static Student findByName(string name)
+        public Student FindByName(string name)
         {
             throw new NotImplementedException();
         }
 
-        public static Student save(Student student)
+        public  Student Save(Student student)
         {
-            return StudentRepository.save(student);
+            Optional Ostudent = studentRepo.save(student);
+            if (Ostudent.IsPresent)
+            {
+                return (Student)Ostudent.Get();
+            }
+            throw exceptions.GetDuplicateObjectException();
         }
 
         

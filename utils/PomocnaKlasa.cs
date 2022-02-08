@@ -1,34 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FirstProjectCS.exceptions;
 using FirstProjectCS.model;
 using FirstProjectCS.servis.Impl;
 
 namespace FirstProjectCS.utils
 {
-    internal class PomocnaKlasa
+    public class PomocnaKlasa
     {
+        private readonly CustomException exceptions = (CustomException)SingletonCreator.GetInstance(typeof(CustomException));
+        private readonly StudentServisImpl studentService = (StudentServisImpl)SingletonCreator.GetInstance(typeof(StudentServisImpl));
 
-        public static Student indexToStudent()
+
+        public  Student IndexToStudent()
         {
             Console.WriteLine("Unesite index studenta :");
             string index = Console.ReadLine();
-            Student s = StudentServisImpl.findByIndex(index);
 
+            Student s = (Student)studentService.FindByIndex(index);
             return s;
+
         }
 
-        public static bool yesOrNo()
+        public  bool YesOrNo()
         {
             Console.WriteLine("Molim unesite  | da | i pritisnite ENTER za potvrdu. ");
             Console.WriteLine("Molim unesite  | ne | i pritisnite ENTER za prekid brisanja. ");
 
             string odgovor = Console.ReadLine();
 
-            return odgovor == "da" ? true : false;
+            return odgovor == "da";
         }
 
-        internal static Predmet nameToPredmet()
+        public  Predmet NameToPredmet()
         {
             Console.WriteLine("Unesite naziv predmeta: ");
             string nazivPredmeta = Console.ReadLine();
@@ -37,7 +42,7 @@ namespace FirstProjectCS.utils
             return p;
         }
 
-        public static Nastavnik nameToNastavnik()
+        public  Nastavnik NameToNastavnik()
         {
             Console.WriteLine("Unesite ime nastavnika: ");
             string ime = Console.ReadLine();
@@ -46,7 +51,7 @@ namespace FirstProjectCS.utils
             return n;
         }
 
-        internal static IspitniRok nameToIspitniRok()
+        public  IspitniRok NameToIspitniRok()
         {
             Console.WriteLine("Unsesite naziv ispitnog roka: ");
             string uneseniNaziv = Console.ReadLine();

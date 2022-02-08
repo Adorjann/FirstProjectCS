@@ -2,22 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 using FirstProjectCS.model;
+using FirstProjectCS.utils;
 
 
 namespace FirstProjectCS.repository
 {
-    internal class StudentRepository
+    public class StudentRepository
     {
+        
+        private StudentRepository()
+        {
 
-        private static List<Student> sviStudent = new List<Student>();
+        }
+        
 
-        public static Student save(Student s)
+        private  List<Student> sviStudent = new List<Student>();
+
+        public  Optional save(Student s)
         {
             //INSERT INTO student VALUES (id,index,ime,prezime,grad)
 
-            Student student = findByIndex(s.Index);
+            Optional Ostudent= findByIndex(s.Index);
             
-            if(student == null && s != null)
+            if(!Ostudent.IsPresent && s != null)
             {   
                 if(s.Id == 0) //dummy autoIncrement
                 {
@@ -25,28 +32,26 @@ namespace FirstProjectCS.repository
                     s.Id++;
                 }
                 sviStudent.Add(s);
-                return s;
+                return Optional.Of(s);
             }
-            return null;
+            return Optional.Empty();
         }
 
-        internal static Student findById(int id)
+        internal  Optional findById(int id)
         {
             //SELECT * FROM student WHERE student.id = ?
-
-            Student retVal = null;
 
             foreach (Student student in sviStudent)
             {
                 if(student.Id == id)
                 {
-                   return retVal = student;
+                   return Optional.Of(student);
                 }
             }
-            return retVal;
+            return Optional.Empty();
         }
 
-        internal static Student delete(Student student)
+        internal  Optional delete(Student student)
         {
             //DELETE FROM student WHERE student.index = ?
 
@@ -54,35 +59,33 @@ namespace FirstProjectCS.repository
             
             if (!sviStudent.Contains(student))
             {
-                return student;
+                Optional.Of(student);
             }
-            return null;
+            return Optional.Empty();
         }
 
-        public static List<Student> findAll()
+        public  Optional findAll()
         {
             //SELECT * FROM student;
-            List<Student> retVal = null;
-
-            retVal = sviStudent.Count != 0 ? sviStudent : null;
-
-            return retVal;
+            if (sviStudent.Count == 0)
+            {
+                return Optional.Empty();
+            }
+            return Optional.Of(sviStudent);
         }
 
-        internal static Student findByIndex(string index)
+        internal  Optional findByIndex(string index)
         {
             //SELECT * FROM student WHERE student.index = ?
-
-            Student retVal = null;
 
             foreach (Student it in sviStudent)
             {
                 if(it.Index == index)
                 {
-                    return retVal = it;
+                    return Optional.Of(it);
                 }
             }
-            return retVal;
+            return Optional.Empty();
         }
     }
 }

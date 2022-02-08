@@ -9,35 +9,43 @@ namespace FirstProjectCS.repository
     {
         private static List<IspitnaPrijava> sveIspitnePrijave = new List<IspitnaPrijava>();
 
-        internal static List<IspitnaPrijava> findAll()
+        internal static Optional FindAll()
         {
-            return sveIspitnePrijave;
+            if (sveIspitnePrijave.Count == 0)
+            {
+                return Optional.Empty();
+            }
+            return Optional.Of(sveIspitnePrijave);
         }
 
-        internal static IspitnaPrijava save(IspitnaPrijava iPrijava)
+        internal static Optional Save(IspitnaPrijava iPrijava)
         {
             if (!sveIspitnePrijave.Contains(iPrijava))
             {
                 sveIspitnePrijave.Add(iPrijava);
-                return iPrijava;
+                return Optional.Of(iPrijava);
             }
-            return null;
+            return Optional.Empty();
         }
 
-        internal static bool delete(IspitnaPrijava iPrijava)
+        internal static Optional Delete(IspitnaPrijava iPrijava)
         {
-            return sveIspitnePrijave.Remove(iPrijava);
+            if (sveIspitnePrijave.Remove(iPrijava))
+            {
+                return Optional.Of(iPrijava);
+            }
+            return Optional.Empty();
         }
 
-        internal static IspitnaPrijava findById(int prijavaID)
+        internal static Optional FindById(int prijavaID)
         {
             IspitnaPrijava iPrijava = sveIspitnePrijave.Find(ip => ip.GetId() == prijavaID);
 
             if(iPrijava != null)
             {
-                return iPrijava;
+                return Optional.Of(iPrijava);
             }
-            return null;
+            return Optional.Empty();
         }
     }
 }

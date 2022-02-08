@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FirstProjectCS.model
 {
-    internal class Predmet
+    public class Predmet
     {
         private int id;
         private string naziv;

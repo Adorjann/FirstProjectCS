@@ -9,18 +9,18 @@ namespace FirstProjectCS.repository
     {
         private static List<Nastavnik> sviNastavnici = new List<Nastavnik>();
 
-        internal static Nastavnik findByName(string ime)
+        internal static Optional findByName(string ime)
         {
             //SELECT nastavnik FROM nastavnik WHERE nastavnik.ime = ?
             foreach (Nastavnik n in sviNastavnici)
             {
                 if (n.Ime.StartsWith(ime))
-                    return n;
+                    return Optional.Of(n);
             }
-            return null;
+            return Optional.Empty();
         }
 
-        internal static Nastavnik findByImePrezimeZvanje(Nastavnik nastavnik)
+        internal static Optional findByImePrezimeZvanje(Nastavnik nastavnik)
         {
             foreach(Nastavnik n in sviNastavnici)
             {
@@ -28,50 +28,59 @@ namespace FirstProjectCS.repository
                     n.Prezime == nastavnik.Prezime &&
                     n.Zvanje == nastavnik.Zvanje)
                 {
-                    return n;
+                    return Optional.Of(n);
                 }
             }
-            return null;
+            return Optional.Empty();
         }
 
-        internal static Nastavnik findById(int id)
+        internal static Optional findById(int id)
         {
             //SELECT nastavnik FROM nastavnik WHERE nastavnik.id = ?
             foreach (Nastavnik n in sviNastavnici)
             {
                 if (n.Id == id)
-                    return n;
+                    return Optional.Of(n);
             }
-            return null;
+            return Optional.Empty();
         }
 
-        internal static List<Nastavnik> FindAll()
+        internal static Optional FindAll()
         {
             //SELECT * FROM nastavnici;
 
-            return sviNastavnici;
+            if(sviNastavnici.Count == 0)
+            {
+                return Optional.Empty();
+            }
+            return Optional.Of(sviNastavnici);
         }
 
-        internal static bool delete(Nastavnik nastavnikZaBrisanje)
+        internal static Optional Delete(Nastavnik nastavnikZaBrisanje)
         {
             //DELETE nastavnik FROM nastavnik WHERE nastavnik.id = ?
-          return sviNastavnici.Remove(nastavnikZaBrisanje);
-            
+            if (sviNastavnici.Remove(nastavnikZaBrisanje))
+            {
+                return Optional.Of(nastavnikZaBrisanje);
+            }
+            return Optional.Empty();
         }
 
-        internal static Nastavnik save(Nastavnik nastavnik)
+        internal static Optional save(Nastavnik nastavnik)
         {
             //INSERT INTO nastavnik VALUES(?,?);
-
+            Optional Onastavnik = findByImePrezimeZvanje(nastavnik);
+            if (!Onastavnik.IsPresent && nastavnik != null)
+            {
                 if (nastavnik.Id == 0) //dummy autoIncrement
                 {
                     nastavnik.Id = NastavnikRepository.sviNastavnici.Count;
                     nastavnik.Id++;
                 }
                 sviNastavnici.Add(nastavnik);
-                return nastavnik;
-            
-            
+                return Optional.Of(nastavnik);
+            }
+            return Optional.Empty();
         }
     }
 }

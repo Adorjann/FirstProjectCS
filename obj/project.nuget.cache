@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "2aD2X2+PRZky76PhaeMWCFog2+GsxuidK9DCTPjG2V56L35IlnDe4yZdjj0K+5shLAOObsqEqJ6VNaHT+6KgqQ==",
+  "dgSpecHash": "KW9t6Bo41qRZXZuDNwhQtMuxUXSNDpa1HCAzeOCVQf6raOYYhAb6MqZ+IcejFDn4eqyfpMIKodK2CEkryGaVBA==",
   "success": true,
-  "projectFilePath": "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj",
+  "projectFilePath": "D:\\Program-Files\\CS-Projects\\Studentska-sluzba\\FirstProjectCS\\FirstProjectCS.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.21\\microsoft.netcore.app.host.win-x64.3.1.21.nupkg.sha512",
+    "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.22\\microsoft.netcore.app.host.win-x64.3.1.22.nupkg.sha512",
     "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
     "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512",
     "C:\\Users\\Adorjan\\.nuget\\packages\\microsoft.netcore.app.ref\\3.1.0\\microsoft.netcore.app.ref.3.1.0.nupkg.sha512"

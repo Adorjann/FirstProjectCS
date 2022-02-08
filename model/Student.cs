@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FirstProjectCS.model
 {
-    internal class Student
+    public class Student
     {
 
         //fields

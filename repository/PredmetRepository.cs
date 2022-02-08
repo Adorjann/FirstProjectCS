@@ -10,7 +10,7 @@ namespace FirstProjectCS.repository
         private static List<Predmet> sviPredmeti = new List<Predmet>();
 
 
-        internal static Predmet save(Predmet predmet)
+        internal static Optional save(Predmet predmet)
         {
             //INSERT INTO predmet VALUES(?,?);
             
@@ -24,62 +24,65 @@ namespace FirstProjectCS.repository
                     predmet.Id++;
                 }
                 sviPredmeti.Add(predmet);
-                return predmet;
+                return Optional.Of(predmet);
             }
-            return null;
+            return Optional.Empty();
         }
 
-        internal static List<Predmet> findAll()
+        internal static Optional findAll()
         {
             //SELECT * FROM predmet;
+            if(sviPredmeti.Count == 0)
+            {
+                return Optional.Empty();
+            }
 
-
-            return sviPredmeti;
+            return Optional.Empty();
         }
 
-        internal static Predmet delete(Predmet predmetZaBrisanje)
+        internal static Optional delete(Predmet predmetZaBrisanje)
         {
            //DELETE FROM predmet WHERE predmet.naziv = ?
 
-            if (sviPredmeti.Contains(predmetZaBrisanje)) { sviPredmeti.Remove(predmetZaBrisanje); }
-            if (!sviPredmeti.Contains(predmetZaBrisanje)) { return predmetZaBrisanje; }
+            if (sviPredmeti.Remove(predmetZaBrisanje)) 
+            {
+                return Optional.Of(predmetZaBrisanje);
+            }
 
-            return null;
+            return Optional.Empty();
 
         }
 
-        public static Predmet findByName(string name)
+        public static Optional findByName(string name)
         {
             //SELECT predmet WHERE predmet.naziv = ?
 
-            Predmet retVal = null;
+            
             foreach (Predmet predmet in sviPredmeti)
             {
 
                 if(predmet.Naziv.StartsWith(name))
                 {
-                    return retVal = predmet;
+                    return Optional.Of(predmet);
                     
                 }
             }
-
-            return retVal;
+            return Optional.Empty();
         }
-        public static Predmet findById(int id)
+        public static Optional findById(int id)
         {
             //SELECT predmet WHERE predmet.id = ?
 
-            Predmet retVal = null;
             foreach (Predmet predmet in sviPredmeti)
             {
                 if(predmet.Id == id)
                 {
-                    return retVal = predmet;
+                    return Optional.Of(predmet);
                     
                 }
 
             }
-            return retVal;
+            return Optional.Empty();
         }
     }
 }

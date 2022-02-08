@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj": {}
+    "D:\\Program-Files\\CS-Projects\\Studentska-sluzba\\FirstProjectCS\\FirstProjectCS.csproj": {}
   },
   "projects": {
-    "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj": {
+    "D:\\Program-Files\\CS-Projects\\Studentska-sluzba\\FirstProjectCS\\FirstProjectCS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj",
+        "projectUniqueName": "D:\\Program-Files\\CS-Projects\\Studentska-sluzba\\FirstProjectCS\\FirstProjectCS.csproj",
         "projectName": "FirstProjectCS",
-        "projectPath": "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\FirstProjectCS.csproj",
+        "projectPath": "D:\\Program-Files\\CS-Projects\\Studentska-sluzba\\FirstProjectCS\\FirstProjectCS.csproj",
         "packagesPath": "C:\\Users\\Adorjan\\.nuget\\packages\\",
-        "outputPath": "D:\\Program-Files\\CS-Projects\\New folder\\FirstProjectCS\\obj\\",
+        "outputPath": "D:\\Program-Files\\CS-Projects\\Studentska-sluzba\\FirstProjectCS\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Adorjan\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -55,7 +55,7 @@
             },
             {
               "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[3.1.21, 3.1.21]"
+              "version": "[3.1.22, 3.1.22]"
             },
             {
               "name": "Microsoft.NETCore.App.Ref",
@@ -71,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

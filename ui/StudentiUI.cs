@@ -5,15 +5,24 @@ using System.IO;
 using FirstProjectCS.model;
 using FirstProjectCS.servis.Impl;
 using FirstProjectCS.utils;
+using FirstProjectCS.exceptions;
 
 namespace FirstProjectCS.ui
 {
-    internal class StudentiUI
+    //"Controler"
+    public class StudentiUI
     {
-        //"Controler"
 
+        //DI
+        private readonly StudentServisImpl studentService = (StudentServisImpl)SingletonCreator.GetInstance(typeof(StudentServisImpl));
+        private readonly PomocnaKlasa pomocnaKLasa = (PomocnaKlasa)SingletonCreator.GetInstance(typeof(PomocnaKlasa));
 
-        public static void ispisTextStudentOpcije()
+        private StudentiUI()
+        {
+
+        }
+
+        public  void ispisTextStudentOpcije()
         {
             Console.WriteLine("Rad sa studentima - opcije:");
             Console.WriteLine("\tOpcija broj 1 - unos podataka o novom studentu");
@@ -28,7 +37,7 @@ namespace FirstProjectCS.ui
 
         }
 
-        public static void meniStudentiUI()
+        public  void meniStudentiUI()
         {
 
             int odluka = -1;
@@ -92,34 +101,37 @@ namespace FirstProjectCS.ui
 
         }
 
-        private static void sortirajStudentePoPolozenimIspitima()
+        private  void sortirajStudentePoPolozenimIspitima()
         {
-            List<Student> studenti = StudentServisImpl.findAll();
-
-            Console.WriteLine("Studente je moguce sortirati \n\t|1| - Br Polozenih predmeta Rastuce\n\t|2| - Br Polozenih predmeta Opadajuce");
-            Console.WriteLine("Izaberi opciju: ");
-            int odluka = Convert.ToInt32(Console.ReadLine());
-            switch (odluka)
+            try
             {
-                case 1:
-                    studenti.Sort(new PolozenihIspitaComparator(1));
-                    break;
-                case 2:
-                    studenti.Sort(new PolozenihIspitaComparator(-1));
-                    break;
-                default:
-                    break;
+                List<Student> studenti = studentService.FindAll();
+
+                Console.WriteLine("Studente je moguce sortirati \n\t|1| - Br Polozenih predmeta Rastuce\n\t|2| - Br Polozenih predmeta Opadajuce");
+                Console.WriteLine("Izaberi opciju: ");
+                int odluka = Convert.ToInt32(Console.ReadLine());
+                switch (odluka)
+                {
+                    case 1:
+                        studenti.Sort(new PolozenihIspitaComparator(1));
+                        break;
+                    case 2:
+                        studenti.Sort(new PolozenihIspitaComparator(-1));
+                        break;
+                    default:
+                        break;
+                }
+
+                printSviStudenti(studenti);
             }
-
-            printSviStudenti(studenti);
-
-
-
-
+            catch (CollectionIsEmptyException e)
+            {
+                Console.WriteLine("*** Nema Studenata u bazi.");
+            }
         }
 
         //PostMapping
-        public static void create()
+        public  void create()
         {
             Console.WriteLine("Unesite ime novog studenta: ");
             string ime = Console.ReadLine();
@@ -130,15 +142,14 @@ namespace FirstProjectCS.ui
             Console.WriteLine("Unesite grad koji je prebivaliste novom studentu: ");
             string grad = Console.ReadLine();
 
-            //id 0 jer je id autoGenerate
-            Student noviStudent = new Student(0,index,ime,prezime,grad); 
-            Student sacuvaniNoviStudent = StudentServisImpl.save(noviStudent);
-
-            if(sacuvaniNoviStudent != null)
+            try
             {
+                //id = 0 because id is autoIncrement
+                Student noviStudent = new Student(0, index, ime, prezime, grad);
+                Student sacuvaniNoviStudent = studentService.Save(noviStudent);
                 Console.WriteLine("Uspesno sacuvan novi student: \n\t" + sacuvaniNoviStudent);
-            }
-            else
+
+            }catch (DuplicateObjectException e)
             {
                 Console.WriteLine("*** Unos novog studenta nije uspeo.");
                 Console.WriteLine("*** Vec postoji student sa indexom koji ste uneli.");
@@ -146,9 +157,9 @@ namespace FirstProjectCS.ui
         }
 
         //PutMapping
-        public static void edit()
+        public  void edit()
         {
-            Student s = PomocnaKlasa.indexToStudent();
+            Student s = pomocnaKLasa.IndexToStudent();
 
             if(s != null)
             {
@@ -179,7 +190,7 @@ namespace FirstProjectCS.ui
         {
             Student s = PomocnaKlasa.indexToStudent();
 
-            if(s != null)
+            if (s != null)
             {
                 Console.WriteLine("Da li ste sigurni da zelite da obrisete studenta: \n\t" + s);
                 bool odgovor = PomocnaKlasa.yesOrNo();
