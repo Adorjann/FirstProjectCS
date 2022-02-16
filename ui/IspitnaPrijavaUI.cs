@@ -5,13 +5,16 @@ using System.IO;
 using FirstProjectCS.model;
 using FirstProjectCS.servis.Impl;
 using FirstProjectCS.utils;
+using FirstProjectCS.exceptions;
 
 namespace FirstProjectCS.ui
 {
-    internal class IspitnaPrijavaUI
+    public class IspitnaPrijavaUI
     {
-
-		private static void ispisiMenu()
+		private readonly IspitnaPrijavaServiceImpl ipService = (IspitnaPrijavaServiceImpl)SingletonCreator.GetInstance(typeof(IspitnaPrijavaServiceImpl));
+		private readonly PomocnaKlasa pomocnaKlasa = (PomocnaKlasa)SingletonCreator.GetInstance(typeof(PomocnaKlasa));
+        
+        public void IspisiMenu()
 		{
 			Console.WriteLine("Rad sa ispitnim prijavama - opcije:");
 			Console.WriteLine("\tOpcija broj 1 - ispitne prijave za ispitni rok");
@@ -23,126 +26,182 @@ namespace FirstProjectCS.ui
 			Console.WriteLine("\tOpcija broj 0 - IZLAZ");
 		}
 
-		public static void meniIspitnaPrijava()
+        public void MeniIspitnaPrijava()
         {
-			int odluka = -1;
-			while(odluka != 0)
+            int odluka = -1;
+            while (odluka != 0)
             {
-				ispisiMenu();
-				odluka = Convert.ToInt32(Console.ReadLine());
-                switch (odluka) 
-				{ 
-					case 0:
-						Console.WriteLine("Izlaz");
-						break;
-					case 1:
-						IspisiIspitnePrijaveZaIspitniRok();
-						break;
-					case 2:
-						IspisiIspitnePrijaveZaStudenta();
-						break;
-					case 3:
-						IspisiIspitnePrijaveZaPredmet();
-						break;
-					case 4:
-						dodajIspitnuPrijavu();
-						break;
-					case 5:
-						izbrisiIspitnuPrijavu();
-						break;
-					default:
-						Console.WriteLine("Nepostojeca komanda");
-						break;
-				}
+                IspisiMenu();
+                odluka = Convert.ToInt32(Console.ReadLine());
+                switch (odluka)
+                {
+                    case 0:
+                        Console.WriteLine("Izlaz");
+                        break;
+                    case 1:
+                        IspisiIspitnePrijaveZaIspitniRok();
+                        break;
+                    case 2:
+                        IspisiIspitnePrijaveZaStudenta();  
+                        break;
+                    case 3:
+                        IspisiIspitnePrijaveZaPredmet();
+                        break;
+                    case 4:
+                        DodajIspitnuPrijavu();
+                        break;
+                    case 5:
+                        IzbrisiIspitnuPrijavu();
+                        break;
+                    default:
+                        Console.WriteLine("Nepostojeca komanda");
+                        break;
+                }
 
             }
         }
 
-        private static void izbrisiIspitnuPrijavu()
+        private void IzbrisiIspitnuPrijavu()
         {
-			Student student = PomocnaKlasa.indexToStudent();
-			Predmet predmet = PomocnaKlasa.nameToPredmet();
-			IspitniRok iRok = PomocnaKlasa.nameToIspitniRok();
-			int prijavaID = Convert.ToInt32($"{student.Id}{predmet.Id}{iRok.Id}");
+            try
+            {
+                Student student = pomocnaKlasa.IndexToStudent();
+                Predmet predmet = pomocnaKlasa.NameToPredmet();
+                IspitniRok iRok = pomocnaKlasa.NameToIspitniRok();
+                int prijavaID = Convert.ToInt32($"{student.Id}{predmet.Id}{iRok.Id}");
 
-			IspitnaPrijava iPrijava = IspitnaPrijavaServiceImpl.findById(prijavaID);
+                IspitnaPrijava iPrijava = ipService.FindById(prijavaID);
+
+                if (pomocnaKlasa.YesOrNo())
+                {
+                    IspitnaPrijava deletedIPrijava = ipService.Delete(iPrijava);
+
+                    Console.WriteLine("Uspesno obrisana ispitna prijava!");
+
+                }
+                else
+                {
+                    throw new OperationCanceledException();
+                }
+
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Brisanje ispitne prijave je otkazano.");
+            }
+            catch (ObjectNotFoundException)
+            {
+                Console.WriteLine("Doslo je do greske");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
+            }
+		}
+
+        private void DodajIspitnuPrijavu()
+        {
+            try
+            {
+                Student student = pomocnaKlasa.IndexToStudent();
+                Predmet predmet = pomocnaKlasa.NameToPredmet();
+                IspitniRok iRok = pomocnaKlasa.NameToIspitniRok();
+
+                Console.WriteLine("Unesite bodove iz teorije:");
+                int teorija = Convert.ToInt32(Console.ReadLine());
+
+                Console.WriteLine("Unesite bodove iz zadataka:");
+                int zadaci = Convert.ToInt32(Console.ReadLine());
+
+                IspitnaPrijava ispitnaPrijava = new IspitnaPrijava(student, predmet, iRok, teorija, zadaci);
+                ispitnaPrijava.SetId(); // void,bez parametara
+                ipService.Save(ispitnaPrijava);
+			    Console.WriteLine("Uspesno sacuvana nova ispitna Prijava!");
+
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("Kreiranje ispitne prijave prekinuto usled pogresno unesenih podataka.");
+            }
+            catch (DuplicateObjectException)
+            {
+                Console.WriteLine("Vec postoji ispitna prijava.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
+            }
 			
-			if(iPrijava != null)
-            {
-				bool response = PomocnaKlasa.yesOrNo();
-
-				IspitnaPrijava obrisanaPrijava = response ?
-					IspitnaPrijavaServiceImpl.delete(iPrijava) : null;
-
-				string finallOdgovor =
-					obrisanaPrijava == null ? "Brisanje ispitne prijave nije uspelo." : "Uspesno obrisana ispitna prijava!";
-				
-            }
 		}
 
-        private static void dodajIspitnuPrijavu()
+        private void IspisiIspitnePrijaveZaPredmet()
         {
-			Student student = PomocnaKlasa.indexToStudent();
-			Predmet predmet = PomocnaKlasa.nameToPredmet();
-			IspitniRok iRok = PomocnaKlasa.nameToIspitniRok();
-
-			Console.WriteLine("Unesite bodove iz teorije:");
-			int teorija = Convert.ToInt32(Console.ReadLine());
-
-			Console.WriteLine("Unesite bodove iz zadataka:");
-			int zadaci = Convert.ToInt32(Console.ReadLine());
-
-			IspitnaPrijava ispitnaPrijava = new IspitnaPrijava(student,predmet,iRok,teorija,zadaci);
-			ispitnaPrijava.SetId(); // void,bez parametara
-			IspitnaPrijava sacuvanaIP = IspitnaPrijavaServiceImpl.save(ispitnaPrijava);
-
-			if(sacuvanaIP != null)
+            try
             {
-				Console.WriteLine("Uspesno sacuvana nova ispitna Prijava!");
-            }
-            else
-            {
-				Console.WriteLine("kreiranje nove ispitne prijave nije uspelo.");
-            }
-		}
+                Predmet predmet = pomocnaKlasa.NameToPredmet();
 
-        private static void IspisiIspitnePrijaveZaPredmet()
-        {
-			Predmet predmet = PomocnaKlasa.nameToPredmet();
-			if(predmet != null)
-            {
-				foreach(IspitnaPrijava ip in predmet.PredmetImaPrijavljeneIspitnePrijave)
+                predmet.PredmetImaPrijavljeneIspitnePrijave.ForEach(ip =>
                 {
-					Console.WriteLine(ip);
-                }
+
+                    Console.WriteLine(ip);
+                });
+            }
+            catch (ObjectNotFoundException)
+            {
+                Console.WriteLine("Nema predmeta sa zadatim imenom.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
             }
         }
 
-        private static void IspisiIspitnePrijaveZaStudenta()
+        private  void IspisiIspitnePrijaveZaStudenta()
         {
-			Student student = PomocnaKlasa.indexToStudent();
-			if(student != null)
+            try
             {
-				foreach(IspitnaPrijava ip in student.StudentPrijavljujeIspitnePrijave)
+                Student student = pomocnaKlasa.IndexToStudent();
+
+                student.StudentPrijavljujeIspitnePrijave.ForEach(ip =>
                 {
-					Console.WriteLine(ip);
-                }
+
+                    Console.WriteLine(ip);
+                });
+
+            }
+            catch (ObjectNotFoundException)
+            {
+                Console.WriteLine("Neme studenta sa zadatim imenom");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske");
             }
         }
 
-        private static void IspisiIspitnePrijaveZaIspitniRok()
+        private void IspisiIspitnePrijaveZaIspitniRok()
         {
-            IspitniRok iRok = PomocnaKlasa.nameToIspitniRok();
-			if(iRok != null)
+            try
             {
-				foreach(IspitnaPrijava ip in iRok.IspitniRokImaPrijavljeneIspitnePrijave)
+                IspitniRok iRok = pomocnaKlasa.NameToIspitniRok();
+
+                iRok.IspitniRokImaPrijavljeneIspitnePrijave.ForEach(ip =>
                 {
-					Console.WriteLine(ip);
-                }
+                    Console.WriteLine(ip);
+                });
+
+            }
+            catch (ObjectNotFoundException)
+            {
+                Console.WriteLine("Nema ispitnog roka sa zadatim imenom");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
             }
         }
 
-		public static void ucitajIspitnePrijaveSaFajla(string fajl)
+		public void UcitajIspitnePrijaveSaFajla(string fajl)
         {
 			StreamReader sr = new StreamReader(fajl);
 			string line = null;
@@ -153,9 +212,9 @@ namespace FirstProjectCS.ui
                 {
 					string[] tokeni = line.Split(',');
 
-					Student student = StudentServisImpl.findById(Convert.ToInt32(tokeni[0]));
-					Predmet predmet = PredmetServisImpl.findById(Convert.ToInt32(tokeni[1]));
-					IspitniRok ispitniRok = IspitniRokServiceImpl.findById(Convert.ToInt32(tokeni[2]));	
+					Student student = pomocnaKlasa.FindStudentById(Convert.ToInt32(tokeni[0]));
+					Predmet predmet = pomocnaKlasa.FindPredmetById(Convert.ToInt32(tokeni[1]));
+					IspitniRok ispitniRok = pomocnaKlasa.FindIspitniRokById(Convert.ToInt32(tokeni[2]));	
 
 					IspitnaPrijava iPrijava = new IspitnaPrijava();
 					iPrijava.Student = student;
@@ -165,19 +224,22 @@ namespace FirstProjectCS.ui
 					iPrijava.Zadaci= Convert.ToInt32(tokeni[4]);
 
 					//TODO update drugu stranu veze
-					IspitnaPrijava sacuvanaIspitnaPrijava = IspitnaPrijavaServiceImpl.save(iPrijava);
-					if(sacuvanaIspitnaPrijava != null)
-                    {
-						student.dodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
-						predmet.dodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
-						ispitniRok.dodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
-                    }
+					IspitnaPrijava sacuvanaIspitnaPrijava =  ipService.Save(iPrijava);
+					
+					student.DodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
+					predmet.DodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
+					ispitniRok.DodajIspitnuPrijavu(sacuvanaIspitnaPrijava);
+                    
 					line = sr.ReadLine();
 
 				}
 
 			}
-			catch (Exception e)
+            catch (DuplicateObjectException)
+            {
+                Console.WriteLine("Greska pri snimanju u bazu");
+            }
+            catch (Exception e)
             {
 				Console.WriteLine("*** Greska pri ucitavanju ispitne prijave sa fajla. ");
 				Console.WriteLine("\n\t*** " + e.StackTrace);
@@ -191,22 +253,17 @@ namespace FirstProjectCS.ui
 			}
 
         }
-		public static void zapisiIspitnePrijaveUFajl(string fajl)
+		public void ZapisiIspitnePrijaveUFajl(string fajl)
         {
-			List<IspitnaPrijava> svePrijave = IspitnaPrijavaServiceImpl.findAll();
 
 			StreamWriter sw = new StreamWriter(fajl);
 			try {
+			    
+                List<IspitnaPrijava> svePrijave = ipService.FindAll();
 
-                if (svePrijave.Count > 0)
-                {
-					foreach(IspitnaPrijava ip in svePrijave)
-                    {
-						sw.WriteLine(ip.toFileRepresentation());
-                    }
-                }
-
-			}catch (Exception e)
+                svePrijave.ForEach(ip => { sw.WriteLine(ip.ToFileRepresentation()); });
+				
+            }catch (Exception e)
             {
 				Console.WriteLine("*** Greska pri zapisivanju ispitne prijave u fajl");
 				Console.WriteLine("\n\t***"+e.StackTrace);

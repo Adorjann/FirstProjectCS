@@ -26,3 +26,17 @@ D:\Program-Files\CS-Projects\New folder\FirstProjectCS\bin\Debug\netcoreapp3.1\F
 D:\Program-Files\CS-Projects\New folder\FirstProjectCS\bin\Debug\netcoreapp3.1\FirstProjectCS.dll
 D:\Program-Files\CS-Projects\New folder\FirstProjectCS\bin\Debug\netcoreapp3.1\FirstProjectCS.pdb
 D:\Program-Files\CS-Projects\New folder\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.genruntimeconfig.cache
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\bin\Debug\netcoreapp3.1\FirstProjectCS.exe
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\bin\Debug\netcoreapp3.1\FirstProjectCS.deps.json
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\bin\Debug\netcoreapp3.1\FirstProjectCS.runtimeconfig.json
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\bin\Debug\netcoreapp3.1\FirstProjectCS.runtimeconfig.dev.json
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\bin\Debug\netcoreapp3.1\FirstProjectCS.dll
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\bin\Debug\netcoreapp3.1\FirstProjectCS.pdb
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.csproj.AssemblyReference.cache
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.GeneratedMSBuildEditorConfig.editorconfig
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.AssemblyInfoInputs.cache
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.AssemblyInfo.cs
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.csproj.CoreCompileInputs.cache
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.dll
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.pdb
+D:\Program-Files\CS-Projects\Studentska-sluzba\FirstProjectCS\obj\Debug\netcoreapp3.1\FirstProjectCS.genruntimeconfig.cache

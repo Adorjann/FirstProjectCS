@@ -61,7 +61,7 @@ namespace FirstProjectCS.model
                    id == student.id;
         }
 
-        public List<Predmet> dodajPredmet( Predmet predmet)
+        public List<Predmet> DodajPredmet( Predmet predmet)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace FirstProjectCS.model
             
         }
 
-        public List<Predmet> izbaciPredmet(Predmet predmet)
+        public List<Predmet> IzbaciPredmet(Predmet predmet)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace FirstProjectCS.model
             }
 
         }
-        public List<IspitnaPrijava> dodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        public List<IspitnaPrijava> DodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace FirstProjectCS.model
 
         }
 
-        public List<IspitnaPrijava> izbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        public List<IspitnaPrijava> IzbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
         {
             try
             {

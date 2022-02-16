@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FirstProjectCS.model
 {
-    internal class IspitnaPrijava
+    public class IspitnaPrijava
     {
         private int id;
         private Student student;
@@ -42,7 +42,7 @@ namespace FirstProjectCS.model
 
 
 
-        public string toFileRepresentation()
+        public string ToFileRepresentation()
         {
             return $"{this.student.Id},{this.predmet.Id},{this.ispitniRok.Id},{this.teorija},{this.zadaci}";
         }
@@ -53,15 +53,15 @@ namespace FirstProjectCS.model
                 $"u roku {this.ispitniRok.Naziv}| bodovi iz teorije: {this.teorija} | bodovi iz zadataka: {this.zadaci}";
         }
 
-        public double sracunajProsek()
+        public double SracunajProsek()
         {
             return (this.teorija + this.zadaci) / 2;
         }
 
-        public int sracunajOcenu()
+        public int SracunajOcenu()
         {
             
-            double bodovi = sracunajProsek();
+            double bodovi = SracunajProsek();
             int ocena;
             if(bodovi >= 95)
             {

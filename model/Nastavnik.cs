@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FirstProjectCS.model
 {
-    internal class Nastavnik
+    public class Nastavnik
     {
 
         private int id;
@@ -48,7 +48,7 @@ namespace FirstProjectCS.model
         {
             return $"| {this.id} | {this.ime} | {this.prezime} | {this.zvanje} | ";
         }
-        public string toFileRepresentation()
+        public string ToFileRepresentation()
         {
             return $"{this.id},{this.ime},{this.prezime},{this.zvanje}";
         }
@@ -62,7 +62,7 @@ namespace FirstProjectCS.model
                    zvanje == nastavnik.zvanje;
         }
 
-        public List<Predmet> dodajPredmet(Predmet predmet)
+        public List<Predmet> DodajPredmet(Predmet predmet)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace FirstProjectCS.model
                 throw new Exception(ex.Message);
             }
         }
-        public List<Predmet> izbaciPredmet(Predmet predmet)
+        public List<Predmet> IzbaciPredmet(Predmet predmet)
         {
             try
             {

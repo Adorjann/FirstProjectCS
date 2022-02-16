@@ -6,34 +6,69 @@ using FirstProjectCS.repository;
 
 namespace FirstProjectCS.servis.Impl
 {
-    internal class PredmetServisImpl
+    public class PredmetServisImpl
     {
+        private PredmetRepository predmetRepo = (PredmetRepository)SingletonCreator.GetInstance(typeof(PredmetRepository));
+        private CustomException exceptions = (CustomException)SingletonCreator.GetInstance(typeof(CustomException));
 
-
-
-        public static Predmet save(Predmet predmet)
+        private PredmetServisImpl()
         {
-            return PredmetRepository.save(predmet);
+        }
+        
+
+        public  Predmet Save(Predmet predmet)
+        {
+            if (predmet.Naziv != "")
+            {
+                Optional Opredmet = predmetRepo.Save(predmet);
+                if (Opredmet.IsPresent)
+                {
+                    return (Predmet)Opredmet.Get();
+                }
+                throw exceptions.GetDuplicateObjectException();
+            }
+            throw new InvalidOperationException();
         }
 
-        public static Predmet findOneByName(string imePredmeta)
+        public  Predmet FindOneByName(string imePredmeta)
         {
-            return PredmetRepository.findByName(imePredmeta); 
+            Optional Opredmet = predmetRepo.FindByName(imePredmeta);
+            if (Opredmet.IsPresent)
+            {
+                return (Predmet)Opredmet.Get();
+            }
+            throw exceptions.GetObjectNotFoundException();
         }
-        public static Predmet findById(int id)
+        public Predmet FindById(int id)
         {
-            return PredmetRepository.findById(id);
+            Optional Opredmet = predmetRepo.FindById(id);
+            if (Opredmet.IsPresent)
+            {
+                return (Predmet)Opredmet.Get();
+            }
+            throw exceptions.GetObjectNotFoundException();
         }
 
 
-        public static Predmet delete(Predmet predmetZaBrisanje)
+        public Predmet Delete(Predmet predmetZaBrisanje)
         {
-            return PredmetRepository.delete(predmetZaBrisanje);
+            Optional Opredmet = predmetRepo.Delete(predmetZaBrisanje);
+            if (Opredmet.IsPresent)
+            {
+                return (Predmet)Opredmet.Get();
+            }
+            throw exceptions.GetObjectNotFoundException();
         }
 
-        public static List<Predmet> findAll()
+        public  List<Predmet> FindAll()
         {
-            return PredmetRepository.findAll();
+            Optional Opredmeti = predmetRepo.FindAll();
+            if (Opredmeti.IsPresent)
+            {
+                return (List<Predmet>)Opredmeti.Get();
+            }
+            throw exceptions.GetCollectionIsEmptyException();
+
         }
     }
 }

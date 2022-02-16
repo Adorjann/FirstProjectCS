@@ -5,47 +5,52 @@ using FirstProjectCS.model;
 
 namespace FirstProjectCS.repository
 {
-    internal class NastavnikRepository
+    public class NastavnikRepository
     {
         private static List<Nastavnik> sviNastavnici = new List<Nastavnik>();
+        private NastavnikRepository()
+        {
+        }
 
-        internal static Optional findByName(string ime)
+        public Optional FindByName(string ime)
         {
             //SELECT nastavnik FROM nastavnik WHERE nastavnik.ime = ?
-            foreach (Nastavnik n in sviNastavnici)
+            Nastavnik nastavnik = sviNastavnici.Find(n => n.Ime.StartsWith(ime));
+
+            if (nastavnik != null)
             {
-                if (n.Ime.StartsWith(ime))
-                    return Optional.Of(n);
+                return Optional.Of(nastavnik);
             }
             return Optional.Empty();
         }
 
-        internal static Optional findByImePrezimeZvanje(Nastavnik nastavnik)
+        public Optional FindByImePrezimeZvanje(string ime, string prezime, string zvanje)
         {
-            foreach(Nastavnik n in sviNastavnici)
+            Nastavnik nastavnik = sviNastavnici.Find(n =>
+                    n.Ime == ime &&
+                    n.Prezime == prezime &&
+                    n.Zvanje == zvanje);
+
+            if (nastavnik != null)
             {
-                if(n.Ime == nastavnik.Ime &&
-                    n.Prezime == nastavnik.Prezime &&
-                    n.Zvanje == nastavnik.Zvanje)
-                {
-                    return Optional.Of(n);
-                }
+                return Optional.Of(nastavnik);
             }
             return Optional.Empty();
         }
 
-        internal static Optional findById(int id)
+        public Optional FindById(int id)
         {
             //SELECT nastavnik FROM nastavnik WHERE nastavnik.id = ?
-            foreach (Nastavnik n in sviNastavnici)
+            Nastavnik nastavnik = sviNastavnici.Find(n => n.Id == id);
+
+            if (nastavnik != null)
             {
-                if (n.Id == id)
-                    return Optional.Of(n);
+                return Optional.Of(nastavnik);
             }
             return Optional.Empty();
         }
 
-        internal static Optional FindAll()
+        public Optional FindAll()
         {
             //SELECT * FROM nastavnici;
 
@@ -56,7 +61,7 @@ namespace FirstProjectCS.repository
             return Optional.Of(sviNastavnici);
         }
 
-        internal static Optional Delete(Nastavnik nastavnikZaBrisanje)
+        public Optional Delete(Nastavnik nastavnikZaBrisanje)
         {
             //DELETE nastavnik FROM nastavnik WHERE nastavnik.id = ?
             if (sviNastavnici.Remove(nastavnikZaBrisanje))
@@ -66,21 +71,12 @@ namespace FirstProjectCS.repository
             return Optional.Empty();
         }
 
-        internal static Optional save(Nastavnik nastavnik)
+        public Optional Save(Nastavnik nastavnik)
         {
             //INSERT INTO nastavnik VALUES(?,?);
-            Optional Onastavnik = findByImePrezimeZvanje(nastavnik);
-            if (!Onastavnik.IsPresent && nastavnik != null)
-            {
-                if (nastavnik.Id == 0) //dummy autoIncrement
-                {
-                    nastavnik.Id = NastavnikRepository.sviNastavnici.Count;
-                    nastavnik.Id++;
-                }
-                sviNastavnici.Add(nastavnik);
-                return Optional.Of(nastavnik);
-            }
-            return Optional.Empty();
+            
+            sviNastavnici.Add(nastavnik);
+            return Optional.Of(nastavnik);
         }
     }
 }

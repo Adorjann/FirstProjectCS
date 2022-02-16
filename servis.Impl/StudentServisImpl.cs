@@ -20,9 +20,11 @@ namespace FirstProjectCS.servis.Impl
 
         public  Student Delete(Student student)
         {
-            Optional Ostudent = studentRepo.delete(student);
+            Optional Ostudent = studentRepo.Delete(student);
             if (Ostudent.IsPresent)
             {
+                Student deletedS = (Student)Ostudent.Get();
+                
                 return (Student)Ostudent.Get();
             }
             throw exceptions.GetObjectNotFoundException();
@@ -30,7 +32,7 @@ namespace FirstProjectCS.servis.Impl
 
         public  List<Student> FindAll()
         {
-            Optional OallStudents = studentRepo.findAll();
+            Optional OallStudents = studentRepo.FindAll();
             if (OallStudents.IsPresent)
             {
                 return (List<Student>)OallStudents.Get();
@@ -38,14 +40,10 @@ namespace FirstProjectCS.servis.Impl
             throw exceptions.GetCollectionIsEmptyException();
         }
 
-        public  List<Student> FindAllSorted()
-        {
-            throw new NotImplementedException();
-        }
 
         public  Student FindById(int id)
         {
-            Optional Ostudent =  studentRepo.findById(id);
+            Optional Ostudent =  studentRepo.FindById(id);
             if (Ostudent.IsPresent)
             {
                 return (Student)Ostudent.Get();
@@ -55,7 +53,7 @@ namespace FirstProjectCS.servis.Impl
 
         public  Student FindByIndex(string index)
         {
-            Optional Ostudent = studentRepo.findByIndex(index);
+            Optional Ostudent = studentRepo.FindByIndex(index);
             if (Ostudent.IsPresent)
             {
                 return(Student)Ostudent.Get();
@@ -68,14 +66,36 @@ namespace FirstProjectCS.servis.Impl
             throw new NotImplementedException();
         }
 
-        public  Student Save(Student student)
+        public  Student Save(Student s)
         {
-            Optional Ostudent = studentRepo.save(student);
-            if (Ostudent.IsPresent)
+            Optional Ostudent = studentRepo.FindByIndex(s.Index);
+            Optional OsviStudenti = studentRepo.FindAll();
+
+            if (!Ostudent.IsPresent)
             {
-                return (Student)Ostudent.Get();
+                if ((s.Ime != "" && s.Ime != null) &&
+                    (s.Prezime != "" && s.Prezime != null))
+                {
+                    if (s.Id == 0) //dummy autoIncrement
+                    {
+                        List<Student> sviStudenti = OsviStudenti.IsPresent ? 
+                            (List<Student>)OsviStudenti.Get() : new List<Student>();
+                        s.Id =  sviStudenti.Count;
+                        s.Id++;
+                    }
+                    Optional OsavedStudent = studentRepo.Save(s);
+                    if (OsavedStudent.IsPresent)
+                    {
+                        return (Student)OsavedStudent.Get();
+                    }
+                }
+                throw new InvalidOperationException();
             }
             throw exceptions.GetDuplicateObjectException();
+
+
+
+
         }
 
         

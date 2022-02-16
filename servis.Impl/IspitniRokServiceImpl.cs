@@ -6,49 +6,91 @@ using FirstProjectCS.repository;
 
 namespace FirstProjectCS.servis.Impl
 {
+
     internal class IspitniRokServiceImpl
     {
-
         //Service
-        internal static IspitniRok findByName(string uneseniNaziv)
-        {
-            return IspitniRokRepository.findByName(uneseniNaziv);
-        }
-        internal static IspitniRok findById(int id)
-        {
-            return IspitniRokRepository.findById(id);
-        }
 
-        internal static List<IspitniRok> FindAll()
+        private readonly IspitniRokRepository irRepo = (IspitniRokRepository)SingletonCreator.GetInstance(typeof(IspitniRokRepository));
+        private readonly CustomException exception = (CustomException)SingletonCreator.GetInstance(typeof(CustomException));
+        
+        private IspitniRokServiceImpl()
         {
-            return IspitniRokRepository.findAll();
         }
 
-        internal static IspitniRok Save(IspitniRok ir)
+        public IspitniRok FindByName(string uneseniNaziv)
         {
-            List<IspitniRok> sviRokovi = FindAll();
-
-            if(!sviRokovi.Contains(ir) && ir != null)
+            if (uneseniNaziv != "")
             {
-                return IspitniRokRepository.save(ir);
-            }
-            return null;
-        }
-
-        internal static IspitniRok Delete(IspitniRok rokZaBrisanje)
-        {
-            List<IspitniRok> sviRokovi = FindAll();
-            if (sviRokovi.Contains(rokZaBrisanje))
-            {
-                bool sucess = IspitniRokRepository.Delete(rokZaBrisanje);
-                if (sucess && !sviRokovi.Contains(rokZaBrisanje))
+                Optional OIspitniRok = irRepo.FindByName(uneseniNaziv);
+                if (OIspitniRok.IsPresent)
                 {
-                    return rokZaBrisanje;
+                    return (IspitniRok)OIspitniRok.Get();
                 }
+                throw exception.GetObjectNotFoundException(); 
             }
+            throw new InvalidOperationException();
+        }
+        public IspitniRok FindById(int id)
+        {
             
-            return null;
+            Optional OIspitniRok = irRepo.FindById(id);
+            if (OIspitniRok.IsPresent)
+            {
+                return (IspitniRok)OIspitniRok.Get();
+            }
+            throw exception.GetObjectNotFoundException();
+        }
 
+        public List<IspitniRok> FindAll()
+        {
+            Optional OsviRokovi = irRepo.FindAll();
+            if (OsviRokovi.IsPresent)
+            {
+                return (List<IspitniRok>)OsviRokovi.Get();
+            }
+            throw exception.GetCollectionIsEmptyException();
+        }
+
+        public IspitniRok Save(IspitniRok ir)
+        {
+            Optional OsviRokovi = irRepo.FindAll();
+            Optional OIspitniROk = irRepo.FindByName(ir.Naziv);
+
+            if (!OIspitniROk.IsPresent)
+            {
+                if (ir.Naziv != "" && 
+                    ir.Pocetak != null &&
+                    ir.Kraj != null)
+                {
+                    if (ir.Id == 0) //dummy autoincrament
+                    {
+                        List<IspitniRok> sviRokovi = OsviRokovi.IsPresent ?
+                            (List<IspitniRok>)OsviRokovi.Get() : new List<IspitniRok>();
+
+                        ir.Id = sviRokovi.Count;
+                        ir.Id++;
+                    }
+                    Optional OsavedIspitniRok = irRepo.Save(ir);
+
+                    if (OsavedIspitniRok.IsPresent)
+                    {
+                        return (IspitniRok)OsavedIspitniRok.Get();
+                    } 
+                }
+                throw new InvalidOperationException();
+            }
+            throw exception.GetDuplicateObjectException();
+        }
+
+        public IspitniRok Delete(IspitniRok rokZaBrisanje)
+        {
+            Optional OIspitniRok = irRepo.Delete(rokZaBrisanje);
+            if (OIspitniRok.IsPresent)
+            {
+                return (IspitniRok)OIspitniRok.Get();
+            }
+            throw exception.GetObjectNotFoundException();
         }
 
         

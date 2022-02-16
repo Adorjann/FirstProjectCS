@@ -15,29 +15,17 @@ namespace FirstProjectCS.repository
 
         }
         
-
         private  List<Student> sviStudent = new List<Student>();
 
-        public  Optional save(Student s)
+        public  Optional Save(Student s)
         {
-            //INSERT INTO student VALUES (id,index,ime,prezime,grad)
+            //INSERT INTO student VALUES (?,?,?,?,?)
 
-            Optional Ostudent= findByIndex(s.Index);
-            
-            if(!Ostudent.IsPresent && s != null)
-            {   
-                if(s.Id == 0) //dummy autoIncrement
-                {
-                    s.Id = sviStudent.Count;
-                    s.Id++;
-                }
-                sviStudent.Add(s);
-                return Optional.Of(s);
-            }
-            return Optional.Empty();
+            sviStudent.Add(s);
+            return Optional.Of(s);
         }
 
-        internal  Optional findById(int id)
+        public  Optional FindById(int id)
         {
             //SELECT * FROM student WHERE student.id = ?
 
@@ -51,20 +39,18 @@ namespace FirstProjectCS.repository
             return Optional.Empty();
         }
 
-        internal  Optional delete(Student student)
+        public  Optional Delete(Student student)
         {
             //DELETE FROM student WHERE student.index = ?
 
-            if (sviStudent.Contains(student)) { sviStudent.Remove(student); }
-            
-            if (!sviStudent.Contains(student))
+            if (sviStudent.Remove(student))
             {
                 Optional.Of(student);
             }
             return Optional.Empty();
         }
 
-        public  Optional findAll()
+        public  Optional FindAll()
         {
             //SELECT * FROM student;
             if (sviStudent.Count == 0)
@@ -74,7 +60,7 @@ namespace FirstProjectCS.repository
             return Optional.Of(sviStudent);
         }
 
-        internal  Optional findByIndex(string index)
+        public  Optional FindByIndex(string index)
         {
             //SELECT * FROM student WHERE student.index = ?
 

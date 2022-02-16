@@ -5,20 +5,25 @@ using System.Text;
 
 namespace FirstProjectCS.repository
 {
-    internal class PredmetRepository
+    public class PredmetRepository
     {
         private static List<Predmet> sviPredmeti = new List<Predmet>();
 
+        private PredmetRepository()
+        {
+        }
 
-        internal static Optional save(Predmet predmet)
+        public  Optional Save(Predmet predmet)
         {
             //INSERT INTO predmet VALUES(?,?);
             
-            Predmet testingP = findByName(predmet.Naziv);
+            Optional Opredmet = FindByName(predmet.Naziv);
 
-            if(testingP == null && predmet != null)
+            if (!Opredmet.IsPresent && 
+                (predmet != null) && 
+                (predmet.Naziv != ""))
             {
-                if(predmet.Id == 0) //dummy autoIncrement
+                if (predmet.Id == 0) //dummy autoIncrement
                 {   
                     predmet.Id = sviPredmeti.Count;
                     predmet.Id++;
@@ -29,18 +34,18 @@ namespace FirstProjectCS.repository
             return Optional.Empty();
         }
 
-        internal static Optional findAll()
+        public Optional FindAll()
         {
             //SELECT * FROM predmet;
-            if(sviPredmeti.Count == 0)
+            if(sviPredmeti.Count != 0)
             {
-                return Optional.Empty();
+                return Optional.Of(sviPredmeti);
             }
 
             return Optional.Empty();
         }
 
-        internal static Optional delete(Predmet predmetZaBrisanje)
+        public Optional Delete(Predmet predmetZaBrisanje)
         {
            //DELETE FROM predmet WHERE predmet.naziv = ?
 
@@ -53,35 +58,30 @@ namespace FirstProjectCS.repository
 
         }
 
-        public static Optional findByName(string name)
+        public Optional FindByName(string name)
         {
-            //SELECT predmet WHERE predmet.naziv = ?
+            //SELECT predmet WHERE predmet.naziv LIKE = ?%
 
+            Predmet predmet = sviPredmeti.Find(p => p.Naziv.StartsWith(name));
             
-            foreach (Predmet predmet in sviPredmeti)
+            if (predmet != null)
             {
-
-                if(predmet.Naziv.StartsWith(name))
-                {
-                    return Optional.Of(predmet);
-                    
-                }
+                return Optional.Of(predmet);
             }
+
             return Optional.Empty();
         }
-        public static Optional findById(int id)
+        public Optional FindById(int id)
         {
             //SELECT predmet WHERE predmet.id = ?
 
-            foreach (Predmet predmet in sviPredmeti)
-            {
-                if(predmet.Id == id)
-                {
-                    return Optional.Of(predmet);
-                    
-                }
+            Predmet predmet = sviPredmeti.Find(p => p.Id == id);
 
+            if (predmet != null)
+            {
+                return Optional.Of(predmet);
             }
+
             return Optional.Empty();
         }
     }

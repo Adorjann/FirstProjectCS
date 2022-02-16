@@ -6,55 +6,98 @@ using FirstProjectCS.repository;
 
 namespace FirstProjectCS.servis.Impl
 {
-    internal class NastavnikServisImpl
+    public class NastavnikServisImpl
     {
         //Service
-        
-        
-
-        internal static Nastavnik findByName(string ime)
+        private readonly NastavnikRepository nastavnikRepository = 
+            (NastavnikRepository)SingletonCreator.GetInstance(typeof(NastavnikRepository));
+        private readonly CustomException exception =
+            (CustomException)SingletonCreator.GetInstance(typeof(CustomException));
+        private NastavnikServisImpl()
         {
-            return NastavnikRepository.findByName(ime);
-        }
-        internal static Nastavnik findImePrezimeZvanje(Nastavnik nastavnik)
-        {
-            return NastavnikRepository.findByImePrezimeZvanje(nastavnik);
         }
 
-        internal static Nastavnik findById(int id)
+        public Nastavnik FindByName(string ime)
         {
-            return NastavnikRepository.findById(id);
-        }
-
-        internal static List<Nastavnik> findAll()
-        {
-            return NastavnikRepository.FindAll();
-        }
-
-        internal static Nastavnik delete(Nastavnik nastavnikZaBrisanje)
-        {
-            List<Nastavnik> sviNastavnici = findAll();
-            if (sviNastavnici.Contains(nastavnikZaBrisanje))
+         
+            Optional Onastavnik = nastavnikRepository.FindByName(ime);
+            if (Onastavnik.IsPresent)
             {
-                bool sucess = NastavnikRepository.delete(nastavnikZaBrisanje);
-                if (sucess && !sviNastavnici.Contains(nastavnikZaBrisanje))
-                {
-                    return nastavnikZaBrisanje;
-                }
+                return (Nastavnik)Onastavnik.Get();
             }
+            throw exception.GetObjectNotFoundException();
             
-            return null;
+        }
+        public Nastavnik FindImePrezimeZvanje(string ime, string prezime, string zvanje)
+        {
+            Optional Onastavnik = nastavnikRepository.FindByImePrezimeZvanje(ime,prezime, zvanje);
+            if (Onastavnik.IsPresent)
+            {
+                return (Nastavnik)Onastavnik.Get();
+            }
+            throw exception.GetObjectNotFoundException();
         }
 
-        internal static Nastavnik save(Nastavnik nastavnik)
+        public Nastavnik FindById(int id)
         {
-            List<Nastavnik> sviNastavnici = findAll();
-
-            if(nastavnik != null && !sviNastavnici.Contains(nastavnik))
+            Optional Onastavnik = nastavnikRepository.FindById(id);
+            if (Onastavnik.IsPresent)
             {
-                return NastavnikRepository.save(nastavnik);
+                return (Nastavnik)Onastavnik.Get();
             }
-            return null;
+            throw exception.GetObjectNotFoundException();
+        }
+
+        public List<Nastavnik> FindAll()
+        {
+            Optional OsviNastavnici = nastavnikRepository.FindAll();
+            if (OsviNastavnici.IsPresent)
+            {
+                return (List<Nastavnik>)OsviNastavnici.Get();
+            }
+            throw exception.GetCollectionIsEmptyException();
+        }
+
+        public Nastavnik Delete(Nastavnik nastavnikZaBrisanje)
+        {
+            Optional Onastavnik = nastavnikRepository.Delete(nastavnikZaBrisanje);
+            if (Onastavnik.IsPresent)
+            {
+                return (Nastavnik)Onastavnik.Get();
+            }
+            throw exception.GetObjectNotFoundException();
+        }
+
+        public Nastavnik Save(Nastavnik nastavnik)
+        {
+            Optional Onastavnik = nastavnikRepository.FindByImePrezimeZvanje(nastavnik.Ime, nastavnik.Prezime, nastavnik.Zvanje);
+            Optional OsviNastavnici = nastavnikRepository.FindAll();
+
+            if (!Onastavnik.IsPresent)
+            {
+                if (nastavnik.Ime != "" &&
+                    nastavnik.Prezime != "" &&
+                    nastavnik.Zvanje != "")
+                {
+                    if (nastavnik.Id == 0) //dummy autoIncrement
+                    {
+                        List<Nastavnik> sviNastavnici = OsviNastavnici.IsPresent ?
+                           (List<Nastavnik>)OsviNastavnici.Get() : new List<Nastavnik>();
+
+                        nastavnik.Id = sviNastavnici.Count;
+                        nastavnik.Id++;
+                    }
+                    Optional OsavedNastavnik = nastavnikRepository.Save(nastavnik);
+
+                    if (OsavedNastavnik.IsPresent)
+                    {
+                        return (Nastavnik)OsavedNastavnik.Get();
+                    }
+                }
+                throw new InvalidOperationException();
+            }
+            throw exception.GetDuplicateObjectException();
+            
         }
     }
 }

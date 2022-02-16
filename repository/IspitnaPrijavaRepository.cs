@@ -5,11 +5,11 @@ using FirstProjectCS.model;
 
 namespace FirstProjectCS.repository
 {
-    internal class IspitnaPrijavaRepository
+    public class IspitnaPrijavaRepository
     {
         private static List<IspitnaPrijava> sveIspitnePrijave = new List<IspitnaPrijava>();
 
-        internal static Optional FindAll()
+        public Optional FindAll()
         {
             if (sveIspitnePrijave.Count == 0)
             {
@@ -18,7 +18,7 @@ namespace FirstProjectCS.repository
             return Optional.Of(sveIspitnePrijave);
         }
 
-        internal static Optional Save(IspitnaPrijava iPrijava)
+        public Optional Save(IspitnaPrijava iPrijava)
         {
             if (!sveIspitnePrijave.Contains(iPrijava))
             {
@@ -28,7 +28,7 @@ namespace FirstProjectCS.repository
             return Optional.Empty();
         }
 
-        internal static Optional Delete(IspitnaPrijava iPrijava)
+        public Optional Delete(IspitnaPrijava iPrijava)
         {
             if (sveIspitnePrijave.Remove(iPrijava))
             {
@@ -37,7 +37,7 @@ namespace FirstProjectCS.repository
             return Optional.Empty();
         }
 
-        internal static Optional FindById(int prijavaID)
+        public Optional FindById(int prijavaID)
         {
             IspitnaPrijava iPrijava = sveIspitnePrijave.Find(ip => ip.GetId() == prijavaID);
 

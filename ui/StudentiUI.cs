@@ -22,7 +22,7 @@ namespace FirstProjectCS.ui
 
         }
 
-        public  void ispisTextStudentOpcije()
+        private  void IspisTextStudentOpcije()
         {
             Console.WriteLine("Rad sa studentima - opcije:");
             Console.WriteLine("\tOpcija broj 1 - unos podataka o novom studentu");
@@ -37,13 +37,13 @@ namespace FirstProjectCS.ui
 
         }
 
-        public  void meniStudentiUI()
+        public  void MeniStudentiUI()
         {
 
             int odluka = -1;
             while(odluka != 0)
             {
-                ispisTextStudentOpcije();
+                IspisTextStudentOpcije();
                 odluka = Convert.ToInt32(Console.ReadLine());
 
                 switch (odluka)
@@ -55,35 +55,35 @@ namespace FirstProjectCS.ui
 
                     case 1:
                         //unos novog studenta [POST]
-                        create();
+                        Create();
                         break;
 
                     case 2:
                         //izmena podataka o studentu [PUT]
-                        edit();
+                        Edit();
                         break;
 
                     case 3:
                         //brisanje podataka o studentu [DELETE]
-                        delete();
+                        Delete();
                         break;
 
                     case 4:
                         //ispis svih studenata [GET]
-                        getAll(); 
+                        GetAll(); 
                         break;
 
                     case 5:
                         //ispis podataka o odredjenom studentu sa njegovim predmetima koje pohadja [GET]
-                        getOne("predmeti");
+                        GetOne("predmeti");
                         break;
 
                     case 6:
                         //ispis podataka o odredjenom studentu sa njegovim ispitnim prijavama [GET]
-                        getOne("prijave");
+                        GetOne("prijave");
                         break;
                     case 7:
-                        sortirajStudentePoPolozenimIspitima();
+                        SortirajStudentePoPolozenimIspitima();
                         break;
                     
 
@@ -101,7 +101,7 @@ namespace FirstProjectCS.ui
 
         }
 
-        private  void sortirajStudentePoPolozenimIspitima()
+        private  void SortirajStudentePoPolozenimIspitima()
         {
             try
             {
@@ -122,16 +122,20 @@ namespace FirstProjectCS.ui
                         break;
                 }
 
-                printSviStudenti(studenti);
+                PrintSviStudenti(studenti);
             }
-            catch (CollectionIsEmptyException e)
+            catch (CollectionIsEmptyException )
             {
                 Console.WriteLine("*** Nema Studenata u bazi.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
             }
         }
 
         //PostMapping
-        public  void create()
+        public  void Create()
         {
             Console.WriteLine("Unesite ime novog studenta: ");
             string ime = Console.ReadLine();
@@ -149,20 +153,29 @@ namespace FirstProjectCS.ui
                 Student sacuvaniNoviStudent = studentService.Save(noviStudent);
                 Console.WriteLine("Uspesno sacuvan novi student: \n\t" + sacuvaniNoviStudent);
 
-            }catch (DuplicateObjectException e)
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("Pogresno uneseni podaci");
+            }
+            catch (DuplicateObjectException )
             {
                 Console.WriteLine("*** Unos novog studenta nije uspeo.");
                 Console.WriteLine("*** Vec postoji student sa indexom koji ste uneli.");
             }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
+            }
         }
 
         //PutMapping
-        public  void edit()
+        public  void Edit()
         {
-            Student s = pomocnaKLasa.IndexToStudent();
+            try 
+	        {	        
+		        Student s = pomocnaKLasa.IndexToStudent();
 
-            if(s != null)
-            {
                 Console.WriteLine("Unesite izmenjeno ime studenta: ");
                 string novoIme = Console.ReadLine();
                 Console.WriteLine("Unesite izmenjeno prezime studenta: ");
@@ -170,102 +183,131 @@ namespace FirstProjectCS.ui
                 Console.WriteLine("Unesite izmenjeni grad studenta: ");
                 string noviGrad = Console.ReadLine();
 
-                s.Ime = novoIme;
-                s.Prezime = novoPrezime;
-                s.Grad = noviGrad;
-
-                Console.WriteLine("Uspesno promenjeni podaci! \n\t " + s);
-            }
-            else
+                if (novoIme != "" && novoPrezime != "" && noviGrad != "")
+                {
+                    s.Ime = novoIme;
+                    s.Prezime = novoPrezime;
+                    s.Grad = noviGrad;
+                    Console.WriteLine("Uspesno promenjeni podaci! \n\t " + s);
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+	        }
+	        catch (ObjectNotFoundException )
+	        {
+                Console.WriteLine("Nepostoji student sa zadatim indexom");    
+	        }
+            catch(InvalidOperationException)
             {
-                Console.WriteLine("Nepostoji student sa zadatim indexom");
+                Console.WriteLine("Pogresno uneseni novi podaci.");
             }
-            
-            
-
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je od greske");
+            }
         }
 
-
-        public static void delete()
+        private void Delete()
         {
-            Student s = PomocnaKlasa.indexToStudent();
-
-            if (s != null)
+            try
             {
+                Student s = pomocnaKLasa.IndexToStudent();
+
                 Console.WriteLine("Da li ste sigurni da zelite da obrisete studenta: \n\t" + s);
-                bool odgovor = PomocnaKlasa.yesOrNo();
+                bool odgovor = pomocnaKLasa.YesOrNo();
                  
-                Student IzbrisanStudent = odgovor? StudentServisImpl.delete(s) : null;
+                Student izbrisanStudent = odgovor? studentService.Delete(s) : throw new OperationCanceledException();
 
-                string finallOdgovor =
-                    IzbrisanStudent == null ? "Prekinuto brisanje!" : "Uspesno obrisan student: \n\t" + s;
+                Console.WriteLine("Uspesno obrisan student: \n\t" + izbrisanStudent);
 
-                Console.WriteLine(finallOdgovor);
+            }
+            catch (ObjectNotFoundException )
+            {
+                Console.WriteLine("Brisanje studenta nije uspelo.");
+            }
+            catch (OperationCanceledException )
+            {
+                Console.WriteLine("Prekinuto brisanje studenta");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
             }
 
-            
-            
+
         }
 
         //GetMapping
-        public static void getAll()
+        private  void GetAll()
         {
-            List<Student> studenti = StudentServisImpl.findAll(); 
-            if(studenti.Count == 0 && studenti == null)
+            try
             {
-                Console.WriteLine("Nema studenata.");
+                List<Student> studenti = studentService.FindAll();
+                this.PrintSviStudenti(studenti);
             }
-            else
+            catch (CollectionIsEmptyException )
             {
-                printSviStudenti(studenti);
+                Console.WriteLine("Nema studenata u bazi.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
             }
             
         }
 
-        private static void printSviStudenti(List<Student> studenti)
+        private void PrintSviStudenti(List<Student> studenti)
         {
             Console.WriteLine("Svi studenti: ");
-            foreach (Student student in studenti)
-            {
+            studenti.ForEach(student => {
+
                 Console.WriteLine("\t" + student);
-            }
+            });
+            
         }
 
 
-        public static void getOne(string kolekcija)
+        private void GetOne(string kolekcija)
         {
             //TODO: dodati listanje predmeta koje student pohadja i listu prijavljenih ispita
 
-            Student student = PomocnaKlasa.indexToStudent();
-
-            if(student != null)
+            try
             {
+                Student student = pomocnaKLasa.IndexToStudent();
+
                 Console.WriteLine("\n-|- " + student);
-                if(kolekcija == "predmeti")
+                if (kolekcija == "predmeti" && student.StudentPohadjaPredmete.Count != 0)
                 {
                     Console.WriteLine("\t\t pohadja predmete: \n");
-                    foreach(Predmet it in student.StudentPohadjaPredmete)
-                    {
-                        Console.WriteLine("\t" + it);
-                    }
-                }else if(kolekcija == "ispitnePrijave")
+                    student.StudentPohadjaPredmete.ForEach(predmet => Console.WriteLine("\t"+predmet));
+                }
+                else if (kolekcija == "ispitnePrijave" && student.StudentPrijavljujeIspitnePrijave.Count != 0) 
                 {
-                    Console.WriteLine("\t\t ima ispitne prijave: \n");
-                    foreach (IspitnaPrijava ip in student.StudentPrijavljujeIspitnePrijave)
-                    {
-                        Console.WriteLine(ip);
-                    }
+                    Console.WriteLine("\t\t ima ispitne prijave: \n");  
+                    student.StudentPrijavljujeIspitnePrijave.ForEach(prijava => Console.WriteLine(prijava));
+                }
+                else
+                {
+                    throw new CollectionIsEmptyException("\t nema "+kolekcija);
                 }
             }
-            else
+            catch (ObjectNotFoundException )
             {
                 Console.WriteLine("Nepostoji student sa zadatim indexom");
             }
-
+            catch (CollectionIsEmptyException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Doslo je do greske.");
+            }
         }
 
-
-        public static void ucitajStudenteSaFajla(string fajl)
+        public void UcitajStudenteSaFajla(string fajl)
         {
             StreamReader sr = new StreamReader(fajl);
             string line;
@@ -284,18 +326,21 @@ namespace FirstProjectCS.ui
                     student.Ime = tokeni[3];
                     student.Grad = tokeni[4];
 
-                    Student snimljeniStudent = StudentServisImpl.save(student);
+                    Student snimljeniStudent = studentService.Save(student);
 
                     if (snimljeniStudent == null)
                     {
-                        Console.WriteLine("*** Greska pri snimanju studenata u repozitorijum.");
                         break;
                     }
                     line = sr.ReadLine();
                 }
                 
 
-            }catch(Exception e)
+            }catch (DuplicateObjectException)
+            {
+                Console.WriteLine("*** Student je vec snimljen u repozitorijum.");
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("*** Greska pri ucitavanju studenata sa fajla. ");
                 Console.WriteLine("\n\t*** " + e.StackTrace);
@@ -307,23 +352,20 @@ namespace FirstProjectCS.ui
                 Console.WriteLine("Zavrseno ucitavanje studenata");
             }
         }
-        public static void zapisiStudenteUFajl(string fajl)
+        public void ZapisiStudenteUFajl(string fajl)
         {
-            List<Student> sviStudenti = StudentServisImpl.findAll();
-
-            StreamWriter sw = new StreamWriter(fajl);
+                StreamWriter sw = new StreamWriter(fajl);
             try { 
+                List<Student> sviStudenti = studentService.FindAll();
 
-
-                for(int i=0; i< sviStudenti.Count; i++) 
-                {
-                    
-                    sw.WriteLine(sviStudenti[i].ToFileReprezentation()); 
-
-                }
-                
+                sviStudenti.ForEach(student => sw.WriteLine(student.ToFileReprezentation()));
             }
-            catch(Exception e)
+            catch (CollectionIsEmptyException e)
+            {
+                Console.WriteLine("*** Nema studenata za zapisivanje.");
+                Console.WriteLine("\n\t*** " + e.Message);
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("*** Greska pri zapisivanju studenta u fajl.");
                 Console.WriteLine("\n\t*** " + e.StackTrace);

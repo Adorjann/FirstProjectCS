@@ -15,9 +15,9 @@ namespace FirstProjectCS.model
 
         public int Id { get => id; set => id = value; }
         public string Naziv { get => naziv; set => naziv = value; }
-        internal List<Student> PredmetPohadjajuStudenti { get => predmetPohadjajuStudenti; set => predmetPohadjajuStudenti = value; }
-        internal List<Nastavnik> PredmetPredajuNastavnici { get => predmetPredajuNastavnici; set => predmetPredajuNastavnici = value; }
-        internal List<IspitnaPrijava> PredmetImaPrijavljeneIspitnePrijave { get => predmetImaPrijavljeneIspitnePrijave; set => predmetImaPrijavljeneIspitnePrijave = value; }
+        public List<Student> PredmetPohadjajuStudenti { get => predmetPohadjajuStudenti; set => predmetPohadjajuStudenti = value; }
+        public List<Nastavnik> PredmetPredajuNastavnici { get => predmetPredajuNastavnici; set => predmetPredajuNastavnici = value; }
+        public List<IspitnaPrijava> PredmetImaPrijavljeneIspitnePrijave { get => predmetImaPrijavljeneIspitnePrijave; set => predmetImaPrijavljeneIspitnePrijave = value; }
 
 
 
@@ -52,7 +52,7 @@ namespace FirstProjectCS.model
                    naziv == predmet.naziv;
         }
 
-        public List<Student> dodajStudenta (Student student) 
+        public List<Student> DodajStudenta (Student student) 
         {
             try
             {
@@ -84,7 +84,7 @@ namespace FirstProjectCS.model
                 throw new Exception(ex.Message);
             }
         }
-        public List<Student> izbaciStudenta(Student student)
+        public List<Student> IzbaciStudenta(Student student)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace FirstProjectCS.model
             }
             
         }
-        public List<Nastavnik> dodajNastavnika(Nastavnik nastavnik)
+        public List<Nastavnik> DodajNastavnika(Nastavnik nastavnik)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace FirstProjectCS.model
                 throw new Exception(ex.Message);
             }
         }
-        public List<Nastavnik> izbaciNastavnika(Nastavnik nastavnik)
+        public List<Nastavnik> IzbaciNastavnika(Nastavnik nastavnik)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace FirstProjectCS.model
             }
 
         }
-        public List<IspitnaPrijava> dodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        public List<IspitnaPrijava> DodajIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace FirstProjectCS.model
 
         }
 
-        public List<IspitnaPrijava> izbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
+        public List<IspitnaPrijava> IzbaciIspitnuPrijavu(IspitnaPrijava ispitnaPrijava)
         {
             try
             {
@@ -218,7 +218,7 @@ namespace FirstProjectCS.model
 
         }
 
-        public string toFileReprezentation()
+        public string ToFileReprezentation()
         {
             return $"{this.id},{this.naziv} ";
         }

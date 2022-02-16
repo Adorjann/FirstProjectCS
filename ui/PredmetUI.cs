@@ -5,13 +5,20 @@ using System.IO;
 using FirstProjectCS.utils;
 using FirstProjectCS.model;
 using FirstProjectCS.servis.Impl;
+using FirstProjectCS.exceptions;
 
 namespace FirstProjectCS.ui
 {
-    internal class PredmetUI
-    {
+	public class PredmetUI
+	{
+		private readonly PredmetServisImpl predmetService = (PredmetServisImpl)SingletonCreator.GetInstance(typeof(PredmetServisImpl));
+		private readonly PomocnaKlasa pomocnaKlasa = (PomocnaKlasa)SingletonCreator.GetInstance(typeof(PomocnaKlasa));
 
-		public static void ispisiTekstStudentOpcije()
+        private PredmetUI()
+        {
+        }
+
+        private void IspisiTekstStudentOpcije()
 		{
 			Console.WriteLine("Rad sa predmetima - opcije:");
 			Console.WriteLine("\tOpcija broj 1 - unos podataka o novom Predmetu");
@@ -24,43 +31,45 @@ namespace FirstProjectCS.ui
 			Console.WriteLine("\tOpcija broj 0 - IZLAZ");
 		}
 
-		public static void meniPredmetUI()
-        {
+		public void MeniPredmetUI()
+		{
 			int odluka = -1;
 
 			while(odluka != 0)
-            {
-				ispisiTekstStudentOpcije();
+			{
 				odluka = Convert.ToInt32(Console.ReadLine());
+				IspisiTekstStudentOpcije();
 
-                switch (odluka)
-                {
+
+
+				switch (odluka)
+				{
 					case 0:
 						Console.WriteLine("IZLAZ");
 						break;
 					case 1:
 						//unos novog predmeta [POST]
-						create();
+						Create();
 						break;
 					case 2:
 						//izmena predmeta [PUT]
-						edit();
+						Edit();
 						break;
 					case 3:
 						//brisanje predmeta [DELETE]
-						delete();
+						Delete();
 						break;
 					case 4:
 						//ispis svih predmeta [GET]
-						getAll(); //ponudi sortiranje
+						GetAll(); //ponudi sortiranje
 						break;
 					case 5:
 						//ispis 1 predmet i studenti koji pohadjaju taj predmet [GET]
-						getOne("studenti");
+						GetOne("studenti");
 						break;
 					case 6:
 						//ispis 1 predmet i ispitne prijave za taj predmet [GET]
-						getOne("prijave");
+						GetOne("prijave");
 						break;
 					default:
 						Console.WriteLine("Pogresna komanda");
@@ -74,130 +83,162 @@ namespace FirstProjectCS.ui
 			}
 			
 
-        }
-
-        private static void getOne(string kolekcija)
-        {
-			Predmet predmet = PomocnaKlasa.nameToPredmet();
-
-			Console.WriteLine("\n-|- "+predmet);
-            if (kolekcija.Equals("studenti"))
-            {
-				Console.WriteLine("Predmet " + predmet.Naziv + " pohadjaju: \n");
-				foreach (Student it in predmet.PredmetPohadjajuStudenti)
-                {
-					Console.WriteLine("\t" + it); 
-                }	
-            }else if (kolekcija.Equals("prijave"))
-            {
-				foreach(IspitnaPrijava ip in predmet.PredmetImaPrijavljeneIspitnePrijave)
-                {
-					Console.WriteLine(ip);
-                }
-            }
 		}
 
-        private static void getAll()
-        {
-			List<Predmet> sviPredmeti = PredmetServisImpl.findAll();
-			if(sviPredmeti == null || sviPredmeti.Count == 0)
+		private void GetOne(string kolekcija)
+		{
+            try
             {
-				Console.WriteLine("Nema predmeta");
+				Predmet predmet = pomocnaKlasa.NameToPredmet();
+
+				Console.WriteLine("\n-|- "+predmet);
+				if (kolekcija.Equals("studenti") && predmet.PredmetPohadjajuStudenti.Count != 0)
+				{
+					Console.WriteLine("Predmet " + predmet.Naziv + " pohadjaju: \n");
+					predmet.PredmetPohadjajuStudenti.ForEach(student => Console.WriteLine("\t" + student));
+					
+				}else if (kolekcija.Equals("prijave") && predmet.PredmetImaPrijavljeneIspitnePrijave.Count != 0)
+				{
+					predmet.PredmetImaPrijavljeneIspitnePrijave.ForEach(prijava => Console.WriteLine(prijava));
+				}
+			}
+            catch (ObjectNotFoundException)
+            {
+
+                Console.WriteLine("Ne postoji predmet sa unesenim nazivom");
             }
-            else
+			catch (Exception)
+			{
+				Console.WriteLine("Doslo je do greske.");
+			}
+		}
+
+		private void GetAll()
+		{
+            try
             {
+				List<Predmet> sviPredmeti = predmetService.FindAll();
+			
 				Console.WriteLine("Svi studenti: ");
-				foreach(Predmet predmet in sviPredmeti)
-                {
-					Console.WriteLine("\t" + predmet);
-                }	
-            }
-
-        }
-
-        private static void delete()
-        {
-			Predmet predmetZaBrisanje = PomocnaKlasa.nameToPredmet();
-
-			if(predmetZaBrisanje != null)
+				sviPredmeti.ForEach(predmet => Console.WriteLine("\t" + predmet));
+			}
+            catch (CollectionIsEmptyException)
             {
+                Console.WriteLine("Nema Predmeta za ispis.");
+            }
+			catch (Exception)
+			{
+				Console.WriteLine("Doslo je do greske.");
+			}
+		}
+
+		private void Delete()
+		{
+            try
+            {
+				Predmet predmetZaBrisanje = pomocnaKlasa.NameToPredmet();
+
 				Console.WriteLine("Da li ste sigurni da zelite da obrisete predmet: \n\t" + predmetZaBrisanje);
-				bool odgovor = PomocnaKlasa.yesOrNo();
+				bool odgovor = pomocnaKlasa.YesOrNo();
 
-				Predmet izbrisaniPredmet = odgovor ? PredmetServisImpl.delete(predmetZaBrisanje) : null;
+				Predmet izbrisaniPredmet = odgovor ? predmetService.Delete(predmetZaBrisanje) : throw new OperationCanceledException();
 
-				string finalPrintOut = izbrisaniPredmet == null ? "Prekinuto brisanje predmeta" : "Uspesno izbrisan predmet";
-				Console.WriteLine(finalPrintOut);
-            }
-        }
-
-        private static void edit()
-        {
-			Predmet predmet = PomocnaKlasa.nameToPredmet();
-			if(predmet != null)
+				Console.WriteLine("Uspesno izbrisan predmet");
+			}
+			catch(OperationCanceledException) 
+			{
+                Console.WriteLine("Prekinuto brisanje predmeta");
+			}
+            catch (ObjectNotFoundException)
             {
+                Console.WriteLine("Brisanje predmeta nije uspelo");
+            }
+			catch (Exception)
+			{
+				Console.WriteLine("Doslo je do greske.");
+			}
+		}
+
+		private void Edit()
+		{
+            try
+            {
+				Predmet predmet = pomocnaKlasa.NameToPredmet();
+			
 				Console.WriteLine("Unesite Novi naziv Predmeta: ");
 				string noviNaziv = Console.ReadLine();
 
 				predmet.Naziv = noviNaziv;
 
 				Console.WriteLine("Uspesno promenjen naziv predmeta: \n\t"+predmet);
-            }
-            else
+			}
+            catch (ObjectNotFoundException)
             {
 				Console.WriteLine("Ne postoji predmet sa zadatim nazivom");
-            }
+			}
+			catch (Exception)
+			{
+				Console.WriteLine("Doslo je do greske.");
+			}
 
-        }
 
-        private static void create()
-        {
-			Console.WriteLine("Unesite naziv novog predmeta:");
-			string nazivNovogPredmeta = Console.ReadLine();	
+		}
 
-			if(nazivNovogPredmeta != null && nazivNovogPredmeta != "")
+		private void Create()
+		{
+            try
             {
+				Console.WriteLine("Unesite naziv novog predmeta:");
+				string nazivNovogPredmeta = Console.ReadLine();	
+
 				Predmet noviPredmet = new Predmet(0,nazivNovogPredmeta);
-				Predmet sacuvaniPredmet = PredmetServisImpl.save(noviPredmet);
+				Predmet sacuvaniPredmet = predmetService.Save(noviPredmet);
 
-				if(sacuvaniPredmet != null)
-                {
-					Console.WriteLine("Uspesno sacuvan novi Predmet: "+nazivNovogPredmeta);
-                }
-                else
-                {
-					Console.WriteLine("*** Unos novog Predmeta nije uspeo.");
-				}
+				Console.WriteLine("Uspesno sacuvan novi Predmet: "+nazivNovogPredmeta);
+			}
+            catch (DuplicateObjectException)
+            {
+				Console.WriteLine("*** Unos novog Predmeta nije uspeo.");
+			}
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("Pogresno unesen Naziv");
             }
-        }
+			catch (Exception)
+			{
+				Console.WriteLine("Doslo je do greske.");
+			}
 
-		public static void ucitajPredmeteSaFajla(string fajl)
-        {
+
+		}
+
+		public  void UcitajPredmeteSaFajla(string fajl)
+		{
 			StreamReader sr = new StreamReader(fajl);
 			string line;
 
 			try { 
 				line = sr.ReadLine();
 				while(line != null)
-                {
+				{
 					string[] tokeni = line.Split(',');
 					Predmet noviPredmet = new Predmet();
 					noviPredmet.Id = Convert.ToInt32(tokeni[0]);
 					noviPredmet.Naziv = tokeni[1];
 
-					Predmet snimljeniPredmet = PredmetServisImpl.save(noviPredmet);
-					if(snimljeniPredmet == null)
-                    {
-						Console.WriteLine("*** Greska pri snimanju predmeta u memoriju.");
-						break;
-					}
+					predmetService.Save(noviPredmet);
+					
 					line = sr.ReadLine();
 
-                }
+				}
 
-
-			}catch(Exception e)
+			}
+			catch (DuplicateObjectException)
             {
+                Console.WriteLine("Greska pri snimanju u bazu");
+            }
+			catch(Exception e)
+			{
 				Console.WriteLine("*** Greska pri ucitavanju predmeta sa fajla. ");
 				Console.WriteLine("\n\t*** " + e.StackTrace);
 				Console.WriteLine("\n\t*** " + e.Message);
@@ -209,18 +250,15 @@ namespace FirstProjectCS.ui
 			}
 		}
 
-		public static void zapisiPredmeteUFajl(string fajl)
-        {
-			List<Predmet> sviPredmeti = PredmetServisImpl.findAll();
-
+		public void ZapisiPredmeteUFajl(string fajl)
+		{
 			StreamWriter sw = new StreamWriter(fajl);
-            try
-            {
-				foreach(Predmet it in sviPredmeti)
-                {
-					sw.WriteLine(it.toFileReprezentation());
-				}
-            }
+			try
+			{
+				List<Predmet> sviPredmeti = predmetService.FindAll();
+
+				sviPredmeti.ForEach(predmet => sw.WriteLine(predmet.ToFileReprezentation()));
+			}
 			catch (Exception e)
 			{
 				Console.WriteLine("*** Greska pri zapisivanju predmeta u fajl.");
@@ -234,5 +272,5 @@ namespace FirstProjectCS.ui
 			}
 		}
 
-    }
+	}
 }

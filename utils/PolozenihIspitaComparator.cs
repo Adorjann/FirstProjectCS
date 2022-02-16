@@ -30,16 +30,16 @@ namespace FirstProjectCS.utils
 
             foreach (IspitnaPrijava ip in x.StudentPrijavljujeIspitnePrijave)
             {
-                ocenax = ip.sracunajOcenu() > 5 ? ocenax++ : ocenax ; // zasto ovo ne radi?
+                ocenax = ip.SracunajOcenu() > 5 ? ocenax++ : ocenax ; // zasto ovo ne radi?
 
-                if (ip.sracunajOcenu() > 5) { ocenax++; }   // ovo radi
+                if (ip.SracunajOcenu() > 5) { ocenax++; }   // ovo radi
 
             }
             foreach (IspitnaPrijava ip in y.StudentPrijavljujeIspitnePrijave)
             {
-                ocenay = ip.sracunajOcenu() > 5 ? ocenay++ : ocenay ;   //ovo ne radi
+                ocenay = ip.SracunajOcenu() > 5 ? ocenay++ : ocenay ;   //ovo ne radi
 
-                if (ip.sracunajOcenu() > 5) { ocenay++; }   // ovo radi
+                if (ip.SracunajOcenu() > 5) { ocenay++; }   // ovo radi
             }
 
             retVal = ocenax - ocenay;

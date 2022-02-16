@@ -8,8 +8,6 @@ namespace FirstProjectCS
 {
     class Program
     {
-
-
         public static void ispisTextualneOpcije()
         {
             Console.WriteLine("Studentska Sluzba - Osnovne opcije: ");
@@ -29,6 +27,7 @@ namespace FirstProjectCS
             char sp = Path.DirectorySeparatorChar;
             string putDoFajla = ".." + sp + ".." + sp + ".." + sp + "data" + sp;
 
+            //data
             string studentiFajl = putDoFajla + "studenti.csv";
             string nastavniciFajl = putDoFajla + "nastavnici.csv";
             string nastavnik_predmetFajl = putDoFajla + "nastavnik_predmet.csv";
@@ -37,15 +36,28 @@ namespace FirstProjectCS
             string ispitne_prijaveFajl = putDoFajla + "ispitne_prijave.csv";
             string ispitni_rokoviFajl = putDoFajla + "ispitni_rokovi.csv";
 
-            //TODO: UI klase ucitavaju podatke iz fajlova
+            // UI klase ucitavaju podatke iz fajlova
 
-            StudentiUI.ucitajStudenteSaFajla(studentiFajl);
-            PredmetUI.ucitajPredmeteSaFajla(predmetiFajl);
-            Student_Predmet.ucitajVezuStudent_Predmet(student_predmetFajl);
-            NastavnikUI.ucitajNastavnikeSaFajla(nastavniciFajl);
-            Nastavnik_Predmet.ucitajVezuNastavnik_Predmet(nastavnik_predmetFajl);
-            IspitniRokUI.ucitajIspitniRokSaFajla(ispitni_rokoviFajl);
-            IspitnaPrijavaUI.ucitajIspitnePrijaveSaFajla(ispitne_prijaveFajl);
+            StudentiUI studentiUI = (StudentiUI)SingletonCreator.GetInstance(typeof(StudentiUI));
+            studentiUI.UcitajStudenteSaFajla(studentiFajl);
+
+            PredmetUI predmetUI = (PredmetUI)SingletonCreator.GetInstance(typeof(PredmetUI));
+            predmetUI.UcitajPredmeteSaFajla(predmetiFajl);
+
+            Student_Predmet student_predmet = (Student_Predmet)SingletonCreator.GetInstance(typeof(Student_Predmet));
+            student_predmet.UcitajVezuStudent_Predmet(student_predmetFajl);
+
+            NastavnikUI nastavnikUI = (NastavnikUI)SingletonCreator.GetInstance(typeof(NastavnikUI));
+            nastavnikUI.UcitajNastavnikeSaFajla(nastavniciFajl);
+
+            Nastavnik_Predmet nastavnik_Predmet = (Nastavnik_Predmet)SingletonCreator.GetInstance(typeof(Nastavnik_Predmet));
+            nastavnik_Predmet.UcitajVezuNastavnik_Predmet(nastavnik_predmetFajl);
+
+            IspitniRokUI ispitniRokUI = (IspitniRokUI)SingletonCreator.GetInstance(typeof(IspitniRokUI));
+            ispitniRokUI.UcitajIspitniRokSaFajla(ispitni_rokoviFajl);
+
+            IspitnaPrijavaUI ispitnaPrijavaUI = (IspitnaPrijavaUI)SingletonCreator.GetInstance(typeof(IspitnaPrijavaUI));
+            ispitnaPrijavaUI.UcitajIspitnePrijaveSaFajla(ispitne_prijaveFajl);
 
 
 
@@ -65,23 +77,23 @@ namespace FirstProjectCS
 
                     case 1:
                         Console.WriteLine("Studenti UI");
-                        StudentiUI.meniStudentiUI();
+                        studentiUI.MeniStudentiUI();
                         break;
                     case 2:
                         Console.WriteLine("Predmeti UI");
-                        PredmetUI.meniPredmetUI();
+                        predmetUI.MeniPredmetUI();
                         break;
                     case 3:
                         Console.WriteLine("Nastavnici UI");
-                        NastavnikUI.meniNastavnikUI();
+                        nastavnikUI.MeniNastavnikUI();
                         break;
                     case 4:
                         Console.WriteLine("Ispitni Rokovi UI");
-                        IspitniRokUI.meniIspitniRokUI();
+                        ispitniRokUI.MeniIspitniRokUI();
                         break;
                     case 5:
                         Console.WriteLine("Ispitna PrijavaUI");
-                        IspitnaPrijavaUI.meniIspitnaPrijava();
+                        ispitnaPrijavaUI.MeniIspitnaPrijava();
                         break;
                     default:
                         Console.WriteLine("Nepostojeca komanda");
@@ -92,13 +104,13 @@ namespace FirstProjectCS
             }
             
 
-            StudentiUI.zapisiStudenteUFajl(studentiFajl);
-            PredmetUI.zapisiPredmeteUFajl(predmetiFajl);
-            Student_Predmet.zapisiVezuStudent_Predmet(student_predmetFajl);
-            NastavnikUI.zapisiNastavnikeUFajl(nastavniciFajl);
-            IspitniRokUI.ZapisiIspitniRokUFajl(ispitni_rokoviFajl);
-            Nastavnik_Predmet.zapisiVezuNastavnik_Predmet(nastavnik_predmetFajl);
-            //IspitnaPrijavaUI.zapisiIspitnePrijaveUFajl(ispitne_prijaveFajl);
+            studentiUI.ZapisiStudenteUFajl(studentiFajl);
+            predmetUI.ZapisiPredmeteUFajl(predmetiFajl);
+            student_predmet.ZapisiVezuStudent_Predmet(student_predmetFajl);
+            nastavnikUI.ZapisiNastavnikeUFajl(nastavniciFajl);
+            ispitniRokUI.ZapisiIspitniRokUFajl(ispitni_rokoviFajl);
+            nastavnik_Predmet.ZapisiVezuNastavnik_Predmet(nastavnik_predmetFajl);
+            ispitnaPrijavaUI.ZapisiIspitnePrijaveUFajl(ispitne_prijaveFajl);
 
             Console.WriteLine("Program zavrsen");
 
